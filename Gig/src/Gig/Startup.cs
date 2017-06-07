@@ -12,6 +12,7 @@ using Microsoft.Extensions.Logging;
 using Gig.Data;
 using Gig.Models;
 using Gig.Services;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace Gig
 {
@@ -40,8 +41,8 @@ namespace Gig
         public void ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services
+            .AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
