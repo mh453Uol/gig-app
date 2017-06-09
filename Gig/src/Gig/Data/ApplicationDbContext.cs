@@ -6,8 +6,6 @@ namespace Gig.Data
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
-        //This context is used to handle identity - users etc 
-        //Normally credentials are not stored on same database server
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {

@@ -8,9 +8,10 @@ using Gig.Data;
 namespace Gig.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170608144420_sortedForeignKeyInGig")]
+    partial class sortedForeignKeyInGig
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.0.1")
@@ -70,9 +71,7 @@ namespace Gig.Migrations
                     b.Property<byte>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasAnnotation("MaxLength", 255);
+                    b.Property<string>("Name");
 
                     b.HasKey("Id");
 
@@ -89,10 +88,6 @@ namespace Gig.Migrations
                     b.Property<DateTime>("DateAndTime");
 
                     b.Property<byte>("GenreId");
-
-                    b.Property<string>("Venue")
-                        .IsRequired()
-                        .HasAnnotation("MaxLength", 255);
 
                     b.HasKey("Id");
 
