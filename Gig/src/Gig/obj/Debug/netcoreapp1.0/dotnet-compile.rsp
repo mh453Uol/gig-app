@@ -227,6 +227,7 @@
 C:\Projects\gig-app\Gig\src\Gig\Program.cs
 C:\Projects\gig-app\Gig\src\Gig\Startup.cs
 C:\Projects\gig-app\Gig\src\Gig\Controllers\AccountController.cs
+C:\Projects\gig-app\Gig\src\Gig\Controllers\GigsController.cs
 C:\Projects\gig-app\Gig\src\Gig\Controllers\HomeController.cs
 C:\Projects\gig-app\Gig\src\Gig\Controllers\ManageController.cs
 C:\Projects\gig-app\Gig\src\Gig\Data\ApplicationDbContext.cs
@@ -251,6 +252,7 @@ C:\Projects\gig-app\Gig\src\Gig\Models\AccountViewModels\RegisterViewModel.cs
 C:\Projects\gig-app\Gig\src\Gig\Models\AccountViewModels\ResetPasswordViewModel.cs
 C:\Projects\gig-app\Gig\src\Gig\Models\AccountViewModels\SendCodeViewModel.cs
 C:\Projects\gig-app\Gig\src\Gig\Models\AccountViewModels\VerifyCodeViewModel.cs
+C:\Projects\gig-app\Gig\src\Gig\Models\GigsViewModels\GigsFormViewModel.cs
 C:\Projects\gig-app\Gig\src\Gig\Models\ManageViewModels\AddPhoneNumberViewModel.cs
 C:\Projects\gig-app\Gig\src\Gig\Models\ManageViewModels\ChangePasswordViewModel.cs
 C:\Projects\gig-app\Gig\src\Gig\Models\ManageViewModels\ConfigureTwoFactorViewModel.cs
