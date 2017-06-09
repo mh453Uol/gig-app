@@ -234,6 +234,8 @@
 "C:\Projects\gig-app\Gig\src\Gig\Migrations\20170608144420_sortedForeignKeyInGig.Designer.cs"
 "C:\Projects\gig-app\Gig\src\Gig\Migrations\20170609073240_fixedGenreAndGigTable.cs"
 "C:\Projects\gig-app\Gig\src\Gig\Migrations\20170609073240_fixedGenreAndGigTable.Designer.cs"
+"C:\Projects\gig-app\Gig\src\Gig\Migrations\20170609080423_populateGenresTable.cs"
+"C:\Projects\gig-app\Gig\src\Gig\Migrations\20170609080423_populateGenresTable.Designer.cs"
 "C:\Projects\gig-app\Gig\src\Gig\Migrations\ApplicationDbContextModelSnapshot.cs"
 "C:\Projects\gig-app\Gig\src\Gig\Models\ApplicationUser.cs"
 "C:\Projects\gig-app\Gig\src\Gig\Models\Genre.cs"
