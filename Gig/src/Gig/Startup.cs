@@ -13,6 +13,7 @@ using Gig.Data;
 using Gig.Models;
 using Gig.Services;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Gig.Helper.Mapping;
 
 namespace Gig
 {
@@ -53,6 +54,7 @@ namespace Gig
             // Add application services.
             services.AddTransient<IEmailSender, AuthMessageSender>();
             services.AddTransient<ISmsSender, AuthMessageSender>();
+            AutoMapperConfig.RegisterMappings();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

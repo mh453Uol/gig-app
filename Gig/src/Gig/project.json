@@ -1,4 +1,4 @@
-﻿{
+{
   "userSecretsId": "aspnet-Gig-ef291ffc-a828-4f1e-833c-fae515d10814",
 
   "dependencies": {
@@ -43,7 +43,8 @@
     "Microsoft.VisualStudio.Web.CodeGenerators.Mvc": {
       "version": "1.0.0-preview2-final",
       "type": "build"
-    }
+    },
+    "AutoMapper": "6.0.2"
   },
 
   "tools": {
