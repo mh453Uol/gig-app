@@ -5,17 +5,23 @@ using Microsoft.AspNetCore.Authorization;
 using Gig.Models;
 using Microsoft.AspNetCore.Identity;
 using System.Threading.Tasks;
+using System;
+using Gig.Helper.User;
+using Gig.Helper;
 
 namespace Gig.Controllers
 {
-    public class GigsController : BaseController
+    public class GigsController : Controller
     {
-        public readonly ApplicationDbContext _db;
+        public readonly ApplicationDbContext db;
+        private IUserService userService; 
 
         public GigsController(ApplicationDbContext _db,
-            UserManager<ApplicationUser> _userManager): base(_userManager)
+            UserManager<ApplicationUser> _userManager,
+            IUserService _userService)
         {
-            this._db = _db;
+            this.db = _db;
+            this.userService = _userService;
         }
 
         [Authorize]
@@ -23,7 +29,7 @@ namespace Gig.Controllers
         {
             var model = new GigsFormViewModel()
             {
-                Genres = _db.Genres
+                Genres = db.Genres
             };
 
             return View(model);
@@ -31,23 +37,16 @@ namespace Gig.Controllers
 
         [Authorize]
         [HttpPost]
-        public async IActionResult Create(GigsFormViewModel model)
+        public IActionResult Create(GigsFormViewModel model)
         {
             if (ModelState.IsValid)
             {
-                var artist = await this.GetCurrentUserAsync();
-                var gig = new Models.Gig
-                {
-                    GenreId = (byte)model.Genre,
-                    Venue = model.Venue,
-                    DateAndTime = DateTime.Parse(model.Date),
-                    ArtistId = artist.
-
-                }
+                var gig = AutoMapper.Mapper.Map<GigsFormViewModel,Models.Gig>(model);
+                gig.DateAndTime = DateTime.Parse(String.Format("{0}{1}", model.Date, model.Time));
+                gig.ArtistId = userService.GetUserId();
             }
 
             model.Genres = db.Genres;
-            var i = AutoMapper.Mapper.Map<Models.Gig>(model);
             return View();
         }
 

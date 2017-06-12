@@ -11,10 +11,17 @@ namespace Gig.Helper.Mapping
     {
         public static void RegisterMappings()
         {
-            Mapper.Initialize(cfg =>
+            Mapper.Initialize(config =>
             {
-                cfg.CreateMap<GigsFormViewModel, Models.Gig>();
-                cfg.CreateMap<Models.Gig, GigsFormViewModel>();
+                config.CreateMap<GigsFormViewModel, Models.Gig>()
+                    .ForMember(dest => dest.GenreId,
+                        options => options.MapFrom(src => src.Genre))
+                    .ForMember(dest => dest.DateAndTime,
+                        options => options.Ignore())
+                    .ForMember(dest => dest.Genre,
+                        options => options.Ignore());
+                    
+                config.CreateMap<Models.Gig, GigsFormViewModel>();
             });
         }
     }
