@@ -235,8 +235,6 @@ C:\Projects\gig-app\Gig\src\Gig\Controllers\HomeController.cs
 C:\Projects\gig-app\Gig\src\Gig\Controllers\ManageController.cs
 C:\Projects\gig-app\Gig\src\Gig\Data\ApplicationDbContext.cs
 C:\Projects\gig-app\Gig\src\Gig\Helper\Mapping\AutoMapperConfig.cs
-C:\Projects\gig-app\Gig\src\Gig\Helper\User\IUserService.cs
-C:\Projects\gig-app\Gig\src\Gig\Helper\User\UserService.cs
 C:\Projects\gig-app\Gig\src\Gig\Migrations\20170607141354_Initial.cs
 C:\Projects\gig-app\Gig\src\Gig\Migrations\20170607141354_Initial.Designer.cs
 C:\Projects\gig-app\Gig\src\Gig\Migrations\20170607143355_foo.cs
@@ -270,6 +268,8 @@ C:\Projects\gig-app\Gig\src\Gig\Models\ManageViewModels\ManageLoginsViewModel.cs
 C:\Projects\gig-app\Gig\src\Gig\Models\ManageViewModels\RemoveLoginViewModel.cs
 C:\Projects\gig-app\Gig\src\Gig\Models\ManageViewModels\SetPasswordViewModel.cs
 C:\Projects\gig-app\Gig\src\Gig\Models\ManageViewModels\VerifyPhoneNumberViewModel.cs
-C:\Projects\gig-app\Gig\src\Gig\Services\IEmailSender.cs
-C:\Projects\gig-app\Gig\src\Gig\Services\ISmsSender.cs
-C:\Projects\gig-app\Gig\src\Gig\Services\MessageServices.cs
+C:\Projects\gig-app\Gig\src\Gig\Services\Message\IEmailSender.cs
+C:\Projects\gig-app\Gig\src\Gig\Services\Message\ISmsSender.cs
+C:\Projects\gig-app\Gig\src\Gig\Services\Message\MessageServices.cs
+C:\Projects\gig-app\Gig\src\Gig\Services\User\IUserService.cs
+C:\Projects\gig-app\Gig\src\Gig\Services\User\UserService.cs
