@@ -28,5 +28,11 @@ namespace Gig.Models.GigsViewModels
 
         public IEnumerable<Genre> Genres { get; set; }
 
+        public DateTime DateAndTime {
+            get
+            {
+                return DateTime.Parse(Date).Add(TimeSpan.Parse(Time));
+            }
+        }
     }
 }
