@@ -10,12 +10,14 @@ namespace Gig.Models
         public Guid Id { get; set; }
 
         [ForeignKey("Artist")]
+        [Required]
         public string ArtistId { get; set; }
 
         public ApplicationUser Artist { get; set; }
         public DateTime DateAndTime { get; set; }
 
         [ForeignKey("Genre")]
+        [Required]
         public byte GenreId { get; set; }
 
         public Genre Genre { get; set; }

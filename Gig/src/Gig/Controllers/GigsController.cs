@@ -42,12 +42,16 @@ namespace Gig.Controllers
             if (ModelState.IsValid)
             {
                 var gig = AutoMapper.Mapper.Map<GigsFormViewModel,Models.Gig>(model);
-                gig.DateAndTime = DateTime.Parse(String.Format("{0}{1}", model.Date, model.Time));
+                gig.DateAndTime = DateTime.Parse(model.Date).Add(TimeSpan.Parse(model.Time));
                 gig.ArtistId = userService.GetUserId();
-            }
+                db.Add(gig);
+                db.SaveChanges();
 
+                return RedirectToAction("Index","Home",null);
+            }
             model.Genres = db.Genres;
-            return View();
+
+            return View(model);
         }
 
     }

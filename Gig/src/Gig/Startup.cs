@@ -16,6 +16,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Gig.Helper.Mapping;
 using Gig.Helper;
 using Gig.Helper.User;
+using Microsoft.AspNetCore.Http;
 
 namespace Gig
 {
@@ -54,10 +55,10 @@ namespace Gig
             services.AddMvc();
 
             // Add application services.
-            services.AddTransient<Microsoft.AspNetCore.Http.IHttpContextAccessor, Microsoft.AspNetCore.Http.HttpContextAccessor>();
             services.AddTransient<IEmailSender, AuthMessageSender>();
             services.AddTransient<ISmsSender, AuthMessageSender>();
             services.AddTransient<IUserService, UserService>();
+            services.AddSingleton<IHttpContextAccessor,HttpContextAccessor>();
             AutoMapperConfig.RegisterMappings();
         }
 
