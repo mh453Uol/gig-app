@@ -4,11 +4,9 @@ using Gig.Models.GigsViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Gig.Models;
 using Microsoft.AspNetCore.Identity;
-using System.Threading.Tasks;
-using System;
-using Gig.Helper.User;
 using Gig.Helper;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace Gig.Controllers
 {
@@ -38,6 +36,7 @@ namespace Gig.Controllers
 
         [Authorize]
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Create(GigsFormViewModel model)
         {
             if (!ModelState.IsValid)
@@ -51,6 +50,16 @@ namespace Gig.Controllers
             db.Add(gig);
             db.SaveChanges();
             return RedirectToAction("Index", "Home", null);
+        }
+
+        [Authorize]
+        [HttpGet]
+        public IActionResult Index()
+        {
+            var gigs = db.Gigs.ToList();
+            var model = AutoMapper.Mapper.Map<IEnumerable<Models.Gig>,
+                IEnumerable<GigsFormViewModel>>(gigs);
+            return View();
         }
     }
 }
