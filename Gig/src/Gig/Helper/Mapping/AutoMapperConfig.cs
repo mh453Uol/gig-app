@@ -16,6 +16,8 @@ namespace Gig.Helper.Mapping
                 config.CreateMap<GigsFormViewModel, Models.Gig>()
                     .ForMember(dest => dest.GenreId,
                         options => options.MapFrom(src => src.Genre))
+                    .ForMember(dest => dest.DateAndTime,
+                        options => options.MapFrom(src => src.DateAndTime()))
                     .ForMember(dest => dest.Genre,
                         options => options.Ignore());
                     

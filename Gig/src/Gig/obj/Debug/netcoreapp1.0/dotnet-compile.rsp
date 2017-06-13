@@ -235,6 +235,8 @@ C:\Projects\gig-app\Gig\src\Gig\Controllers\HomeController.cs
 C:\Projects\gig-app\Gig\src\Gig\Controllers\ManageController.cs
 C:\Projects\gig-app\Gig\src\Gig\Data\ApplicationDbContext.cs
 C:\Projects\gig-app\Gig\src\Gig\Helper\Mapping\AutoMapperConfig.cs
+C:\Projects\gig-app\Gig\src\Gig\Helper\Validation\FutureDate.cs
+C:\Projects\gig-app\Gig\src\Gig\Helper\Validation\Time.cs
 C:\Projects\gig-app\Gig\src\Gig\Migrations\20170607141354_Initial.cs
 C:\Projects\gig-app\Gig\src\Gig\Migrations\20170607141354_Initial.Designer.cs
 C:\Projects\gig-app\Gig\src\Gig\Migrations\20170607143355_foo.cs

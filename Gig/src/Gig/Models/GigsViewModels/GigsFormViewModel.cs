@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Gig.Helper.Validation;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -18,9 +19,11 @@ namespace Gig.Models.GigsViewModels
         public string Venue { get; set; }
 
         [Required]
+        [FutureDate]
         public string Date { get; set; }
 
         [Required]
+        [Time]
         public string Time { get; set; }
 
         [Required]
@@ -28,11 +31,9 @@ namespace Gig.Models.GigsViewModels
 
         public IEnumerable<Genre> Genres { get; set; }
 
-        public DateTime DateAndTime {
-            get
-            {
-                return DateTime.Parse(Date).Add(TimeSpan.Parse(Time));
-            }
+        public DateTime DateAndTime()
+        {
+            return DateTime.Parse(Date).Add(TimeSpan.Parse(Time));
         }
     }
 }
