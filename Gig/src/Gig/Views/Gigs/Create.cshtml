@@ -5,25 +5,26 @@
     ViewData["Title"] = "Create";
 }
 
-<h2>Add a Gig</h2>
+<h2>Add a Gig.</h2>
 
 <form asp-controller="Gigs" asp-action="Create" method="post">
-     
+    <br />
+     <p class="alert alert-info">All fields are <strong>required.</strong></p>
     <div class="form-group">
         <label asp-for="Venue"></label>
-        <input class="form-control" asp-for="Venue" />
+        <input class="form-control" asp-for="Venue" autofocus />
         <span asp-validation-for="Venue" class="text-danger"></span>
     </div>
 
     <div class="form-group">
         <label asp-for="Date"></label>
-        <input class="form-control" asp-for="Date" />
+        <input class="form-control" asp-for="Date" placeholder="eg 20 Jan 2017" />
         <span asp-validation-for="Date" class="text-danger"></span>
     </div>
 
     <div class="form-group">
         <label asp-for="Time"></label>
-        <input class="form-control" asp-for="Time" />
+        <input class="form-control" asp-for="Time" placeholder="eg 12:00" />
         <span asp-validation-for="Time" class="text-danger"></span>
     </div>
 

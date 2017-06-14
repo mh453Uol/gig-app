@@ -250,6 +250,10 @@ C:\Projects\gig-app\Gig\src\Gig\Migrations\20170609080423_populateGenresTable.cs
 C:\Projects\gig-app\Gig\src\Gig\Migrations\20170609080423_populateGenresTable.Designer.cs
 C:\Projects\gig-app\Gig\src\Gig\Migrations\20170612120407_GigGenreId.cs
 C:\Projects\gig-app\Gig\src\Gig\Migrations\20170612120407_GigGenreId.Designer.cs
+C:\Projects\gig-app\Gig\src\Gig\Migrations\20170614140756_addedFirstnameAndSurnameToApplicationUser.cs
+C:\Projects\gig-app\Gig\src\Gig\Migrations\20170614140756_addedFirstnameAndSurnameToApplicationUser.Designer.cs
+C:\Projects\gig-app\Gig\src\Gig\Migrations\20170614141543_FirstNameAndLastNameIsRequired.cs
+C:\Projects\gig-app\Gig\src\Gig\Migrations\20170614141543_FirstNameAndLastNameIsRequired.Designer.cs
 C:\Projects\gig-app\Gig\src\Gig\Migrations\ApplicationDbContextModelSnapshot.cs
 C:\Projects\gig-app\Gig\src\Gig\Models\ApplicationUser.cs
 C:\Projects\gig-app\Gig\src\Gig\Models\Genre.cs

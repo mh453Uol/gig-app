@@ -24,6 +24,16 @@ namespace Gig.Controllers
         }
 
         [Authorize]
+        [HttpGet]
+        public IActionResult Index()
+        {
+            var gigs = db.Gigs.ToList();
+            var model = AutoMapper.Mapper.Map<IEnumerable<Models.Gig>,
+                IEnumerable<GigsFormViewModel>>(gigs);
+            return View();
+        }
+
+        [Authorize]
         public IActionResult Create()
         {
             var model = new GigsFormViewModel()
@@ -52,14 +62,5 @@ namespace Gig.Controllers
             return RedirectToAction("Index", "Home", null);
         }
 
-        [Authorize]
-        [HttpGet]
-        public IActionResult Index()
-        {
-            var gigs = db.Gigs.ToList();
-            var model = AutoMapper.Mapper.Map<IEnumerable<Models.Gig>,
-                IEnumerable<GigsFormViewModel>>(gigs);
-            return View();
-        }
     }
 }
