@@ -226,7 +226,6 @@
 "C:\Projects\gig-app\Gig\src\Gig\Program.cs"
 "C:\Projects\gig-app\Gig\src\Gig\Startup.cs"
 "C:\Projects\gig-app\Gig\src\Gig\Controllers\AccountController.cs"
-"C:\Projects\gig-app\Gig\src\Gig\Controllers\BaseController.cs"
 "C:\Projects\gig-app\Gig\src\Gig\Controllers\GigsController.cs"
 "C:\Projects\gig-app\Gig\src\Gig\Controllers\HomeController.cs"
 "C:\Projects\gig-app\Gig\src\Gig\Controllers\ManageController.cs"
@@ -274,5 +273,3 @@
 "C:\Projects\gig-app\Gig\src\Gig\Services\Message\IEmailSender.cs"
 "C:\Projects\gig-app\Gig\src\Gig\Services\Message\ISmsSender.cs"
 "C:\Projects\gig-app\Gig\src\Gig\Services\Message\MessageServices.cs"
-"C:\Projects\gig-app\Gig\src\Gig\Services\User\IUserService.cs"
-"C:\Projects\gig-app\Gig\src\Gig\Services\User\UserService.cs"

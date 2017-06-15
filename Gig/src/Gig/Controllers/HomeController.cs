@@ -1,16 +1,33 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Microsoft.AspNetCore.Mvc;
+using Gig.Data;
+using Gig.Helper;
+using Microsoft.AspNetCore.Identity;
+using Gig.Models;
+using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+using System.Linq;
+using System;
 
 namespace Gig.Controllers
 {
     public class HomeController : Controller
     {
-        public IActionResult Index()
+        public readonly ApplicationDbContext db;
+
+        public HomeController(ApplicationDbContext _db)
         {
-            return View();
+            this.db = _db;
+        }
+
+        public async Task<IActionResult> Index()
+        {
+            var upcomingGigs = await db.Gigs
+                .Include(g => g.Artist)
+                .Where(g => g.DateAndTime > DateTime.Now)
+                .AsNoTracking()
+                .ToListAsync();
+
+            return View(upcomingGigs);
         }
 
         public IActionResult About()

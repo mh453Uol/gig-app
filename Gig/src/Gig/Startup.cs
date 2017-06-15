@@ -15,7 +15,6 @@ using Gig.Services;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Gig.Helper.Mapping;
 using Gig.Helper;
-using Gig.Helper.User;
 using Microsoft.AspNetCore.Http;
 
 namespace Gig
@@ -57,8 +56,6 @@ namespace Gig
             // Add application services.
             services.AddTransient<IEmailSender, AuthMessageSender>();
             services.AddTransient<ISmsSender, AuthMessageSender>();
-            services.AddTransient<IUserService, UserService>();
-            services.AddSingleton<IHttpContextAccessor,HttpContextAccessor>();
             AutoMapperConfig.RegisterMappings();
         }
 
