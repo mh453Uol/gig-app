@@ -13,6 +13,7 @@ namespace Gig.Data
 
         public DbSet<Models.Gig> Gigs { get; set; }
         public DbSet<Genre> Genres { get; set; }
+        public DbSet<Attendance> Attendances { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -25,7 +26,23 @@ namespace Gig.Data
                 .WithOne(g => g.Artist)
                 .HasForeignKey(g => g.ArtistId)
                 .OnDelete(Microsoft.EntityFrameworkCore.Metadata.DeleteBehavior.Restrict);
-                
+
+            builder.Entity<Attendance>()
+                .HasKey(a => new { a.GigId, a.AttendeeId });
+
+            builder.Entity<Attendance>()
+                .HasOne(a => a.Gig)
+                .WithMany()
+                .HasForeignKey(a => a.GigId)
+                .OnDelete(Microsoft.EntityFrameworkCore.Metadata.DeleteBehavior.Restrict);
+
+            builder.Entity<Attendance>()
+                .HasOne(a => a.Attendee)
+                .WithMany()
+                .HasForeignKey(a => a.AttendeeId)
+                .OnDelete(Microsoft.EntityFrameworkCore.Metadata.DeleteBehavior.Restrict);
+
+
             base.OnModelCreating(builder);
         }
     }

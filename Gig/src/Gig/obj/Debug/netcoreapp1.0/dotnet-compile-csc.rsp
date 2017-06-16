@@ -251,6 +251,7 @@
 "C:\Projects\gig-app\Gig\src\Gig\Migrations\20170614141543_FirstNameAndLastNameIsRequired.Designer.cs"
 "C:\Projects\gig-app\Gig\src\Gig\Migrations\ApplicationDbContextModelSnapshot.cs"
 "C:\Projects\gig-app\Gig\src\Gig\Models\ApplicationUser.cs"
+"C:\Projects\gig-app\Gig\src\Gig\Models\Attendance.cs"
 "C:\Projects\gig-app\Gig\src\Gig\Models\Genre.cs"
 "C:\Projects\gig-app\Gig\src\Gig\Models\Gig.cs"
 "C:\Projects\gig-app\Gig\src\Gig\Models\AccountViewModels\ExternalLoginConfirmationViewModel.cs"
