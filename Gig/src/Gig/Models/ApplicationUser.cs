@@ -12,7 +12,7 @@ namespace Gig.Models
     {
         public ApplicationUser()
         {
-            Attendances = new List<Attendance>();
+            //Attendances = new List<Attendance>();
         }
 
         [Required]
@@ -31,6 +31,6 @@ namespace Gig.Models
             }
         }
 
-        public IEnumerable<Attendance> Attendances { get; set; }
+        //public IEnumerable<Attendance> Attendances { get; set; }
     }
 }

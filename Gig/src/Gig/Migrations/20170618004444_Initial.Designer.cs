@@ -8,13 +8,13 @@ using Gig.Data;
 namespace Gig.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20170609073240_fixedGenreAndGigTable")]
-    partial class fixedGenreAndGigTable
+    [Migration("20170618004444_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
-                .HasAnnotation("ProductVersion", "1.0.1")
+                .HasAnnotation("ProductVersion", "1.0.3")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("Gig.Models.ApplicationUser", b =>
@@ -27,19 +27,23 @@ namespace Gig.Migrations
                         .IsConcurrencyToken();
 
                     b.Property<string>("Email")
-                        .HasAnnotation("MaxLength", 256);
+                        .HasMaxLength(256);
 
                     b.Property<bool>("EmailConfirmed");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasMaxLength(20);
 
                     b.Property<bool>("LockoutEnabled");
 
                     b.Property<DateTimeOffset?>("LockoutEnd");
 
                     b.Property<string>("NormalizedEmail")
-                        .HasAnnotation("MaxLength", 256);
+                        .HasMaxLength(256);
 
                     b.Property<string>("NormalizedUserName")
-                        .HasAnnotation("MaxLength", 256);
+                        .HasMaxLength(256);
 
                     b.Property<string>("PasswordHash");
 
@@ -49,10 +53,14 @@ namespace Gig.Migrations
 
                     b.Property<string>("SecurityStamp");
 
+                    b.Property<string>("Surname")
+                        .IsRequired()
+                        .HasMaxLength(20);
+
                     b.Property<bool>("TwoFactorEnabled");
 
                     b.Property<string>("UserName")
-                        .HasAnnotation("MaxLength", 256);
+                        .HasMaxLength(256);
 
                     b.HasKey("Id");
 
@@ -66,6 +74,21 @@ namespace Gig.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
+            modelBuilder.Entity("Gig.Models.Attendance", b =>
+                {
+                    b.Property<Guid>("GigId");
+
+                    b.Property<string>("AttendeeId");
+
+                    b.HasKey("GigId", "AttendeeId");
+
+                    b.HasIndex("AttendeeId");
+
+                    b.HasIndex("GigId");
+
+                    b.ToTable("Attendances");
+                });
+
             modelBuilder.Entity("Gig.Models.Genre", b =>
                 {
                     b.Property<byte>("Id")
@@ -73,7 +96,7 @@ namespace Gig.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasAnnotation("MaxLength", 255);
+                        .HasMaxLength(255);
 
                     b.HasKey("Id");
 
@@ -85,7 +108,8 @@ namespace Gig.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("ArtistId");
+                    b.Property<string>("ArtistId")
+                        .IsRequired();
 
                     b.Property<DateTime>("DateAndTime");
 
@@ -93,7 +117,7 @@ namespace Gig.Migrations
 
                     b.Property<string>("Venue")
                         .IsRequired()
-                        .HasAnnotation("MaxLength", 255);
+                        .HasMaxLength(255);
 
                     b.HasKey("Id");
 
@@ -112,10 +136,10 @@ namespace Gig.Migrations
                         .IsConcurrencyToken();
 
                     b.Property<string>("Name")
-                        .HasAnnotation("MaxLength", 256);
+                        .HasMaxLength(256);
 
                     b.Property<string>("NormalizedName")
-                        .HasAnnotation("MaxLength", 256);
+                        .HasMaxLength(256);
 
                     b.HasKey("Id");
 
@@ -209,6 +233,19 @@ namespace Gig.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
+                });
+
+            modelBuilder.Entity("Gig.Models.Attendance", b =>
+                {
+                    b.HasOne("Gig.Models.ApplicationUser", "Attendee")
+                        .WithMany()
+                        .HasForeignKey("AttendeeId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Gig.Models.Gig", "Gig")
+                        .WithMany()
+                        .HasForeignKey("GigId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Gig.Models.Gig", b =>

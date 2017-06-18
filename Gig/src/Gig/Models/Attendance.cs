@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -8,7 +9,7 @@ namespace Gig.Models
     {
 
         [Required]
-        public string GigId { get; set; }
+        public Guid GigId { get; set; }
 
         [ForeignKey("GigId")]
         public Models.Gig Gig { get; set; }

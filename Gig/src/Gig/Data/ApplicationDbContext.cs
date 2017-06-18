@@ -33,15 +33,12 @@ namespace Gig.Data
             builder.Entity<Attendance>()
                 .HasOne(a => a.Gig)
                 .WithMany()
-                .HasForeignKey(a => a.GigId)
-                .OnDelete(Microsoft.EntityFrameworkCore.Metadata.DeleteBehavior.Restrict);
+                .HasForeignKey(a => a.GigId);
 
             builder.Entity<Attendance>()
                 .HasOne(a => a.Attendee)
                 .WithMany()
-                .HasForeignKey(a => a.AttendeeId)
-                .OnDelete(Microsoft.EntityFrameworkCore.Metadata.DeleteBehavior.Restrict);
-
+                .HasForeignKey(a => a.AttendeeId);
 
             base.OnModelCreating(builder);
         }
