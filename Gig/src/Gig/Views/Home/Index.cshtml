@@ -3,6 +3,11 @@
     ViewData["Title"] = "Home Page";
 }
 
+<div class="alert alert-info alert-dismissable collapse js-alert-error">
+    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+    <strong>Warning!</strong> You are already attending this gig.
+</div>
+
 <ul class="calendar">
     @foreach (var gig in Model)
     {
@@ -14,8 +19,32 @@
             <div class="detail">
                 <p class="artist"><b>@gig.Artist.FullName</b></p>
                 <p class="genre">@gig.Genre.Name</p>
-                <a href="#" class="btn-primary btn-sm going-btn">Going ?</a>
+                <button data-gig-id="@gig.Id" class="btn btn-default btn-xs js-toggle-attendance">Going ?</button>
             </div>
         </li>
     }
 </ul>
+
+@section Scripts
+{
+    <script>
+        $(document).ready(function () {
+
+            $(".js-toggle-attendance").click(function (e) {
+                var button = $(e.target);
+                $.post("/api/attendances", { gigId: button.attr("data-gig-id") })
+                    .done(function () {
+                        button
+                            .removeClass("btn-default")
+                            .addClass("btn-info")
+                            .text("Going");
+                    })
+                    .fail(function (e) {
+                        console.log(e, $(".js-alert-error"));
+                        $(".js-alert-error").show();
+                    })
+            });
+        });
+    </script>
+
+}

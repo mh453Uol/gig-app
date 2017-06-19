@@ -7,6 +7,16 @@ namespace Gig.Models
 {
     public class Attendance
     {
+        public Attendance()
+        {
+
+        }
+
+        public Attendance(string userId,Guid gigId)
+        {
+            AttendeeId = userId;
+            GigId = gigId;
+        }
 
         [Required]
         public Guid GigId { get; set; }
