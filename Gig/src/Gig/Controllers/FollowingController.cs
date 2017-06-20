@@ -8,6 +8,7 @@ using Gig.Dtos;
 using Gig.Data;
 using Microsoft.AspNetCore.Identity;
 using Gig.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Gig.Controllers
 {
@@ -29,8 +30,9 @@ namespace Gig.Controllers
         {
             var userId = _userManager.GetUserId(HttpContext.User);
 
-            var isFollowing = _db.Followers
-                .Any(f => f.FollowerId == userId &&
+            var isFollowing = await _db.Followers
+                .AsNoTracking()
+                .AnyAsync(f => f.FollowerId == userId &&
                 f.FolloweeId == model.FolloweeId);
 
             if (isFollowing)

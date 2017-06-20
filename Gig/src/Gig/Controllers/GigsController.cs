@@ -12,26 +12,40 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Gig.Controllers
 {
+    [Authorize]
     public class GigsController : Controller
     {
-        public readonly ApplicationDbContext db;
+        public readonly ApplicationDbContext _db;
         private UserManager<ApplicationUser> _userManager;
 
         public GigsController(ApplicationDbContext _db,
             UserManager<ApplicationUser> _userManager)
         {
-            this.db = _db;
+            this._db = _db;
             this._userManager = _userManager;
         }
 
         [Authorize]
         [HttpGet]
-        public IActionResult Index()
+        public async Task<IActionResult> Attending()
         {
-            //var gigs = await db.Gigs.ToListAsync();
-            //var model = AutoMapper.Mapper.Map<IEnumerable<Models.Gig>,
-            //    IEnumerable<GigsFormViewModel>>(gigs);
-            return View();
+            var userId = _userManager.GetUserId(HttpContext.User);
+
+            var attending = await _db.Attendances
+                .Where(g => g.AttendeeId == userId)
+                .Include(g => g.Gig)
+                    .ThenInclude(g => g.Genre)
+                .Include(g => g.Gig)
+                    .ThenInclude(g => g.Artist)
+                .AsNoTracking()
+                .ToListAsync();
+
+            var model = new GigsViewModel() {
+                IsAuthenticated = true,
+                UpcomingGigs = attending.Select(g => g.Gig).ToList()
+            };
+
+            return View(model);
         }
 
         [Authorize]
@@ -39,7 +53,7 @@ namespace Gig.Controllers
         {
             var model = new GigsFormViewModel()
             {
-                Genres = await db.Genres
+                Genres = await _db.Genres
                     .AsNoTracking()
                     .ToListAsync()
             };
@@ -54,14 +68,15 @@ namespace Gig.Controllers
         {
             if (!ModelState.IsValid)
             {
-                model.Genres = await db.Genres.ToListAsync();
+                model.Genres = await _db.Genres.ToListAsync();
                 return View(model);
             }
 
             var gig = AutoMapper.Mapper.Map<GigsFormViewModel, Models.Gig>(model);
             gig.ArtistId = _userManager.GetUserId(User);
-            db.Add(gig);
-            await db.SaveChangesAsync();
+
+            _db.Add(gig);
+            await _db.SaveChangesAsync();
             return RedirectToAction("Index", "Home", null);
         }
 

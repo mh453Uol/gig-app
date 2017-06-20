@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Gig>
+﻿@model GigsViewModel
 @{
     ViewData["Title"] = "Home Page";
 }
@@ -9,7 +9,7 @@
 </div>
 
 <ul class="calendar">
-    @foreach (var gig in Model)
+    @foreach (var gig in Model.UpcomingGigs)
     {
         <li>
             <div class="date">
@@ -21,8 +21,11 @@
                     <b>@gig.Artist.FullName</b>
                 </p>
                 <p class="genre">@gig.Genre.Name</p>
-                <button data-artist-id="@gig.ArtistId" class="btn btn-default btn-xs js-toggle-following">Follow Artist</button>
-                <button data-gig-id="@gig.Id" class="btn btn-default btn-xs js-toggle-attendance">Going ?</button>
+                @if (Model.IsAuthenticated)
+                {
+                    <button data-artist-id="@gig.ArtistId" class="btn btn-default btn-xs js-toggle-following">Follow Artist</button>
+                    <button data-gig-id="@gig.Id" class="btn btn-default btn-xs js-toggle-attendance">Going ?</button>
+                }
             </div>
         </li>
     }

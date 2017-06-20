@@ -7,28 +7,35 @@ using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using System.Linq;
 using System;
+using Gig.Models.GigsViewModels;
 
 namespace Gig.Controllers
 {
     public class HomeController : Controller
     {
-        public readonly ApplicationDbContext db;
+        private readonly ApplicationDbContext _db;
 
-        public HomeController(ApplicationDbContext _db)
+        public HomeController(ApplicationDbContext db)
         {
-            this.db = _db;
+            this._db = db;
         }
 
         public async Task<IActionResult> Index()
         {
-            var upcomingGigs = await db.Gigs
+            var model = new GigsViewModel();
+
+            model.IsAuthenticated = User.Identity.IsAuthenticated;
+
+            var upcomingGigs = await _db.Gigs
                 .Include(g => g.Artist)
                 .Include(g => g.Genre)
                 .Where(g => g.DateAndTime > DateTime.Now)
                 .AsNoTracking()
                 .ToListAsync();
 
-            return View(upcomingGigs);
+            model.UpcomingGigs = upcomingGigs;
+
+            return View(model);
         }
 
         public IActionResult About()

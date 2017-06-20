@@ -32,11 +32,13 @@ namespace Gig.Controllers
             var userId = _userManager.GetUserId(HttpContext.User);
 
             var gig = await _db.Gigs
+                .AsNoTracking()
                 .FirstAsync(g => g.Id == model.GigId);
 
             if(gig == null) { return BadRequest();  }
 
             var isAttending = await _db.Attendances
+                .AsNoTracking()
                 .AnyAsync(a => a.AttendeeId == userId && a.GigId == model.GigId);
 
             if (isAttending) { return BadRequest("Your already attending this Gig");  }
