@@ -4,8 +4,8 @@
 }
 
 <div class="alert alert-info collapse js-alert-error">
-    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-    <strong>Warning!</strong> You are already attending this gig.
+    <a href="#" class="pull-right" style="color:white" onclick="$('.js-alert-error').hide()">x</a>
+    <p></p>
 </div>
 
 <ul class="calendar">
@@ -43,7 +43,9 @@
                             .text("Going");
                     })
                     .fail(function (xhr, textStatus, errorThrown) {
-                        alert(xhr.responseText);
+                        var alert = $(".js-alert-error");
+                        alert.find("p").text(xhr.responseText);
+                        alert.show();
                     });
             });
 
@@ -51,10 +53,15 @@
                 var button = $(e.target);
                 $.post("/api/following", { FolloweeId: button.attr("data-artist-id") })
                     .success(function () {
-
+                        button
+                            .removeClass("btn-default")
+                            .addClass("btn-info")
+                            .text("Going");
                     })
                     .fail(function (xhr, textStatus, errorThrown) {
-                        alert(xhr.responseText);
+                        var alert = $(".js-alert-error");
+                        alert.find("p").text(xhr.responseText);
+                        alert.show();
                     })
             });
         });
