@@ -3,7 +3,7 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="alert alert-info alert-dismissable collapse js-alert-error">
+<div class="alert alert-info collapse js-alert-error">
     <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
     <strong>Warning!</strong> You are already attending this gig.
 </div>
@@ -17,8 +17,11 @@
                 <div class="day">@gig.DateAndTime.ToString("d ")</div>
             </div>
             <div class="detail">
-                <p class="artist"><b>@gig.Artist.FullName</b></p>
+                <p class="artist">
+                    <b>@gig.Artist.FullName</b>
+                </p>
                 <p class="genre">@gig.Genre.Name</p>
+                <button data-artist-id="@gig.ArtistId" class="btn btn-default btn-xs js-toggle-following">Follow Artist</button>
                 <button data-gig-id="@gig.Id" class="btn btn-default btn-xs js-toggle-attendance">Going ?</button>
             </div>
         </li>
@@ -33,15 +36,25 @@
             $(".js-toggle-attendance").click(function (e) {
                 var button = $(e.target);
                 $.post("/api/attendances", { gigId: button.attr("data-gig-id") })
-                    .done(function () {
+                    .success(function () {
                         button
                             .removeClass("btn-default")
                             .addClass("btn-info")
                             .text("Going");
                     })
-                    .fail(function (e) {
-                        console.log(e, $(".js-alert-error"));
-                        $(".js-alert-error").show();
+                    .fail(function (xhr, textStatus, errorThrown) {
+                        alert(xhr.responseText);
+                    });
+            });
+
+            $(".js-toggle-following").click(function (e) {
+                var button = $(e.target);
+                $.post("/api/following", { FolloweeId: button.attr("data-artist-id") })
+                    .success(function () {
+
+                    })
+                    .fail(function (xhr, textStatus, errorThrown) {
+                        alert(xhr.responseText);
                     })
             });
         });

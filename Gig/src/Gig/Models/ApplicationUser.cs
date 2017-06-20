@@ -4,15 +4,20 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
+using System.Collections.ObjectModel;
 
 namespace Gig.Models
 {
     // Add profile data for application users by adding properties to the ApplicationUser class
     public class ApplicationUser : IdentityUser
     {
+        public ICollection<Following> Followers { get; set; }
+        public ICollection<Following> Followees { get; set; }
+
         public ApplicationUser()
         {
-            //Attendances = new List<Attendance>();
+            Followers = new Collection<Following>();
+            Followees = new Collection<Following>();
         }
 
         [Required]

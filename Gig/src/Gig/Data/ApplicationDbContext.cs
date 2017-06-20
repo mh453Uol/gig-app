@@ -14,6 +14,7 @@ namespace Gig.Data
         public DbSet<Models.Gig> Gigs { get; set; }
         public DbSet<Genre> Genres { get; set; }
         public DbSet<Attendance> Attendances { get; set; }
+        public DbSet<Following> Followers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -39,6 +40,37 @@ namespace Gig.Data
                 .HasOne(a => a.Attendee)
                 .WithMany()
                 .HasForeignKey(a => a.AttendeeId);
+
+            //Manually configure many to many relationship
+            builder.Entity<Following>()
+                .HasKey(f => new {  f.FollowerId, f.FolloweeId });
+
+            builder.Entity<Following>()
+                .HasOne(f => f.Follower)
+                .WithMany()
+                .HasForeignKey(f => f.FollowerId)
+                .OnDelete(Microsoft.EntityFrameworkCore.Metadata.DeleteBehavior.Restrict);
+
+            builder.Entity<Following>()
+                .HasOne(f => f.Followee)
+                .WithMany()
+                .HasForeignKey(f => f.FolloweeId)
+                .OnDelete(Microsoft.EntityFrameworkCore.Metadata.DeleteBehavior.Cascade);
+            //End 
+
+            //Config Application for application user to following
+            builder.Entity<ApplicationUser>()
+                .HasMany(u => u.Followers)
+                .WithOne(u => u.Followee)
+                .HasForeignKey(f => f.FollowerId)
+                .OnDelete(Microsoft.EntityFrameworkCore.Metadata.DeleteBehavior.Restrict);
+
+            builder.Entity<ApplicationUser>()
+                .HasMany(u => u.Followees)
+                .WithOne(u => u.Follower)
+                .HasForeignKey(u => u.FolloweeId)
+                .OnDelete(Microsoft.EntityFrameworkCore.Metadata.DeleteBehavior.Restrict);
+            //End
 
             base.OnModelCreating(builder);
         }
