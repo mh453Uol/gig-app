@@ -42,10 +42,11 @@ namespace Gig.Controllers
 
             var model = new GigsViewModel() {
                 IsAuthenticated = true,
-                UpcomingGigs = attending.Select(g => g.Gig).ToList()
+                UpcomingGigs = attending.Select(g => g.Gig).ToList(),
+                Heading = "Gigs I Am Attending"
             };
 
-            return View(model);
+            return View("_Gigs",model);
         }
 
         [Authorize]

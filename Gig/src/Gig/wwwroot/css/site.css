@@ -49,6 +49,9 @@ textarea {
   }
 }
 
+.voffset4 {
+    margin-bottom: 40px;
+}
 /*Bootstrap overrides*/
 .navbar-inverse {
     background-color: #ff4342;

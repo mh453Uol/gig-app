@@ -25,6 +25,7 @@ namespace Gig.Controllers
             var model = new GigsViewModel();
 
             model.IsAuthenticated = User.Identity.IsAuthenticated;
+            model.Heading = "Upcoming Gigs";
 
             var upcomingGigs = await _db.Gigs
                 .Include(g => g.Artist)
@@ -35,7 +36,7 @@ namespace Gig.Controllers
 
             model.UpcomingGigs = upcomingGigs;
 
-            return View(model);
+            return View("_Gigs",model);
         }
 
         public IActionResult About()

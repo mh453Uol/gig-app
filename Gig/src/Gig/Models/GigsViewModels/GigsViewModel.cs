@@ -14,5 +14,6 @@ namespace Gig.Models.GigsViewModels
             UpcomingGigs = new Collection<Gig>();
         }
         public IEnumerable<Models.Gig> UpcomingGigs { get; set; }
+        public string Heading { get; set; }
     }
 }
