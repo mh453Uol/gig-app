@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using Gig.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace Gig.Controllers
+namespace Gig.WebApiControllers
 {
     [Produces("application/json")]
     [Route("api/Following")]

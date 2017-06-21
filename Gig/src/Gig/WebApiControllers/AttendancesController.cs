@@ -9,7 +9,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Gig.Controllers
+namespace Gig.WebApiControllers
 {
     [Authorize]
     [Produces("application/json")]
