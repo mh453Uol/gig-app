@@ -9,11 +9,13 @@ using Gig.Data;
 using Microsoft.AspNetCore.Identity;
 using Gig.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Gig.WebApiControllers
 {
     [Produces("application/json")]
     [Route("api/Following")]
+    [Authorize]
     public class FollowingController : Controller
     {
         private readonly ApplicationDbContext _db;
@@ -55,13 +57,14 @@ namespace Gig.WebApiControllers
             return Ok();
         }
 
+        [HttpPost]
         [Route("Unfollow")]
         public async Task<IActionResult> Unfollow(FollowingDto model)
         {
             var userId = _userManager.GetUserId(HttpContext.User);
 
             var following = await _db.Followers
-                .SingleAsync(f => f.FollowerId == userId &&
+                .SingleOrDefaultAsync(f => f.FollowerId == userId &&
                     f.FolloweeId == model.FolloweeId && f.IsDeleted == false);
 
             var errorMessage = @"You can't unfollow this user since your 

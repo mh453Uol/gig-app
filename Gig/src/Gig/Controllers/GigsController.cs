@@ -25,8 +25,6 @@ namespace Gig.Controllers
             this._userManager = _userManager;
         }
 
-        [Authorize]
-        [HttpGet]
         public async Task<IActionResult> Attending()
         {
             var userId = _userManager.GetUserId(HttpContext.User);
@@ -43,13 +41,12 @@ namespace Gig.Controllers
             var model = new GigsViewModel() {
                 IsAuthenticated = true,
                 UpcomingGigs = attending.Select(g => g.Gig).ToList(),
-                Heading = "Gigs I Am Attending"
+                Heading = "Gigs I'm Attending"
             };
 
             return View("_Gigs",model);
         }
 
-        [Authorize]
         public async Task<IActionResult> Create()
         {
             var model = new GigsFormViewModel()
@@ -62,7 +59,6 @@ namespace Gig.Controllers
             return View(model);
         }
 
-        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(GigsFormViewModel model)
@@ -78,8 +74,19 @@ namespace Gig.Controllers
 
             _db.Add(gig);
             await _db.SaveChangesAsync();
-            return RedirectToAction("Index", "Home", null);
+            return RedirectToAction("Mine");
         }
 
+        public IActionResult Mine()
+        {
+            var userId = _userManager.GetUserId(HttpContext.User);
+
+            var gigs = _db.Gigs
+                .Include(g => g.Genre)
+                .Where(g => g.ArtistId == userId)
+                .OrderByDescending(g => g.DateAndTime);
+
+            return View(gigs);
+        }
     }
 }

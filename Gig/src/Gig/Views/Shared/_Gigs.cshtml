@@ -14,7 +14,7 @@
     @foreach (var gig in Model.UpcomingGigs)
     {
         <li>
-            <div class="date">
+            <div class="date" title="@gig.DateAndTime.ToString("F")">
                 <div class="month">@gig.DateAndTime.ToString("MMM")</div>
                 <div class="day">@gig.DateAndTime.ToString("d ")</div>
             </div>

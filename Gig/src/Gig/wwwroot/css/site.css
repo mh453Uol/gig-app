@@ -115,4 +115,8 @@ ul.calendar {
     background-color: #7314dc;
 }
 
+.greyout {
+    opacity: 0.2;
+    filter: alpha(opacity = 60);
+}
 
