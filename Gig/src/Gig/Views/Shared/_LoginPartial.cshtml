@@ -12,8 +12,8 @@
             <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">@UserManager.GetUserAsync(User).Result.FullName <span class="caret"></span></a>
                 <ul class="dropdown-menu">
-                    <li><a asp-area="" asp-controller="Gigs" asp-action="Attending" title="Attending">Gigs I Am Attending</a></li>
-                    <li><a href="#">Artist I am following</a></li>
+                    <li><a asp-area="" asp-controller="Gigs" asp-action="Attending" title="Attending">Gigs I'm Attending</a></li>
+                    <li><a asp-area="" asp-controller="Following" asp-action="Index" title="Following">Artist I'm following</a></li>
                     <li>
                         <a asp-area="" asp-controller="Manage" asp-action="Index" title="Manage">Account</a>
                     </li>

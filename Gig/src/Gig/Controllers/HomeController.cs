@@ -14,10 +14,13 @@ namespace Gig.Controllers
     public class HomeController : Controller
     {
         private readonly ApplicationDbContext _db;
+        private UserManager<ApplicationUser> _userManager;
 
-        public HomeController(ApplicationDbContext db)
+        public HomeController(ApplicationDbContext db,
+            UserManager<ApplicationUser> userManager)
         {
             this._db = db;
+            this._userManager = userManager;
         }
 
         public async Task<IActionResult> Index()

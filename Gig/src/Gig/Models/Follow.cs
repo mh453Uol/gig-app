@@ -33,5 +33,7 @@ namespace Gig.Models
 
         [ForeignKey("FolloweeId")]
         public ApplicationUser Followee { get; set; }
+
+        public bool IsDeleted { get; set; }
     }
 }

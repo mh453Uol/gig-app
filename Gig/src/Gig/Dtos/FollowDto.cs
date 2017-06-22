@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Gig.Dtos
 {
-    public class FollowDto
+    public class FollowingDto
     {
         public string FolloweeId { get; set; }
     }

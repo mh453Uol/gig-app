@@ -1,0 +1,35 @@
+@model IEnumerable<Following>
+@{
+    ViewData["Title"] = "Folowing";
+}
+
+<h2 class="voffset4">Artists I'm Following.</h2>
+
+@foreach (var artist in Model)
+{
+    <div>
+        <p>@artist.Followee.FullName</p>
+        <button class="btn btn-default btn-xs js-unfollow" data-follower-id="@artist.FolloweeId">Unfollow</button>
+    </div>
+}
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            $(".js-unfollow").click(function (e) {
+                var button = $(e.target);
+                var follower = $(this).parent();
+
+                $.post('/api/following/unfollow', { FolloweeId: button.attr("data-follower-id") })
+                    .success(function () {
+                        console.log("Unfollowing");
+                        follower.hide();
+                    })
+                    .fail(function (errMsg) {
+                        console.log("Error unfollowing artist");
+                    })
+            });
+        });
+    </script>
+}
+

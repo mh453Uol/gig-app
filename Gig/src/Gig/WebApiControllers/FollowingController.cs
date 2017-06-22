@@ -26,22 +26,51 @@ namespace Gig.WebApiControllers
             this._userManager = userManager;
         }
 
-        public async Task<IActionResult> Follow(FollowDto model)
+        [HttpPost]
+        [Route("Follow")]
+        public async Task<IActionResult> Follow(FollowingDto model)
         {
             var userId = _userManager.GetUserId(HttpContext.User);
 
-            var isFollowing = await _db.Followers
-                .AsNoTracking()
-                .AnyAsync(f => f.FollowerId == userId &&
+            var following = await _db.Followers
+                .FirstAsync(f => f.FollowerId == userId &&
                 f.FolloweeId == model.FolloweeId);
 
-            if (isFollowing)
+            if (following != null)
             {
+                if (following.IsDeleted)
+                {
+                    following.IsDeleted = false;
+                    _db.Update(following);
+
+                    await _db.SaveChangesAsync();
+                    return Ok();
+                }
+
                 return BadRequest("Your already following the artist");
             }
 
-            var following = new Following(userId, model.FolloweeId);
-            _db.Add(following);
+            _db.Add(new Following(userId, model.FolloweeId));
+            await _db.SaveChangesAsync();
+            return Ok();
+        }
+
+        [Route("Unfollow")]
+        public async Task<IActionResult> Unfollow(FollowingDto model)
+        {
+            var userId = _userManager.GetUserId(HttpContext.User);
+
+            var following = await _db.Followers
+                .SingleAsync(f => f.FollowerId == userId &&
+                    f.FolloweeId == model.FolloweeId && f.IsDeleted == false);
+
+            var errorMessage = @"You can't unfollow this user since your 
+                not following them in the first place";
+
+            if (following == null) { return BadRequest(errorMessage); }
+
+            following.IsDeleted = true;
+            _db.Update(following);
             await _db.SaveChangesAsync();
 
             return Ok();

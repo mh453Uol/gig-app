@@ -56,7 +56,7 @@
 
             $(".js-toggle-following").click(function (e) {
                 var button = $(e.target);
-                $.post("/api/following", { FolloweeId: button.attr("data-artist-id") })
+                $.post("/api/following/follow", { FolloweeId: button.attr("data-artist-id") })
                     .success(function () {
                         button
                             .removeClass("btn-default")
