@@ -33,7 +33,7 @@ namespace Gig.WebApiControllers
             var userId = _userManager.GetUserId(HttpContext.User);
 
             var following = await _db.Followers
-                .FirstAsync(f => f.FollowerId == userId &&
+                .FirstOrDefaultAsync(f => f.FollowerId == userId &&
                 f.FolloweeId == model.FolloweeId);
 
             if (following != null)
@@ -49,8 +49,8 @@ namespace Gig.WebApiControllers
 
                 return BadRequest("Your already following the artist");
             }
-
-            _db.Add(new Following(userId, model.FolloweeId));
+            var follow = new Following(userId, model.FolloweeId);
+            _db.Add(follow);
             await _db.SaveChangesAsync();
             return Ok();
         }

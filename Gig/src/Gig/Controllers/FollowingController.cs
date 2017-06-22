@@ -27,6 +27,7 @@ namespace Gig.Controllers
         public IActionResult Index()
         {
             var userId = _userManager.GetUserId(HttpContext.User);
+
             var following = _db.Followers
                 .Include(f => f.Followee)
                 .Where(f => f.FollowerId == userId && f.IsDeleted == false)

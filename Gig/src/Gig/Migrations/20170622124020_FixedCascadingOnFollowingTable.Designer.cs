@@ -8,9 +8,10 @@ using Gig.Data;
 namespace Gig.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170622124020_FixedCascadingOnFollowingTable")]
+    partial class FixedCascadingOnFollowingTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.0.3")
@@ -266,12 +267,12 @@ namespace Gig.Migrations
 
             modelBuilder.Entity("Gig.Models.Following", b =>
                 {
-                    b.HasOne("Gig.Models.ApplicationUser", "Followee")
-                        .WithMany("Followers")
-                        .HasForeignKey("FolloweeId");
-
                     b.HasOne("Gig.Models.ApplicationUser", "Follower")
                         .WithMany("Followees")
+                        .HasForeignKey("FolloweeId");
+
+                    b.HasOne("Gig.Models.ApplicationUser", "Followee")
+                        .WithMany("Followers")
                         .HasForeignKey("FollowerId");
                 });
 

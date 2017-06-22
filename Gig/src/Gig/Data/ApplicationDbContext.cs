@@ -47,28 +47,26 @@ namespace Gig.Data
 
             builder.Entity<Following>()
                 .HasOne(f => f.Follower)
-                .WithMany()
+                .WithMany(f => f.Followees)
                 .HasForeignKey(f => f.FollowerId)
                 .OnDelete(Microsoft.EntityFrameworkCore.Metadata.DeleteBehavior.Restrict);
 
             builder.Entity<Following>()
                 .HasOne(f => f.Followee)
-                .WithMany()
+                .WithMany(f => f.Followers)
                 .HasForeignKey(f => f.FolloweeId)
-                .OnDelete(Microsoft.EntityFrameworkCore.Metadata.DeleteBehavior.Cascade);
+                .OnDelete(Microsoft.EntityFrameworkCore.Metadata.DeleteBehavior.Restrict);
             //End 
 
             //Config Application for application user to following
             builder.Entity<ApplicationUser>()
                 .HasMany(u => u.Followers)
                 .WithOne(u => u.Followee)
-                .HasForeignKey(f => f.FollowerId)
                 .OnDelete(Microsoft.EntityFrameworkCore.Metadata.DeleteBehavior.Restrict);
 
             builder.Entity<ApplicationUser>()
                 .HasMany(u => u.Followees)
                 .WithOne(u => u.Follower)
-                .HasForeignKey(u => u.FolloweeId)
                 .OnDelete(Microsoft.EntityFrameworkCore.Metadata.DeleteBehavior.Restrict);
             //End
 
