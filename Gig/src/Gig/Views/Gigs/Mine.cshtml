@@ -8,8 +8,8 @@
 <ul class="calendar">
     @foreach (var gig in Model)
     {
-        <li class="@(gig.DateAndTime < DateTime.Now ? "greyout" : "")" title="@gig.DateAndTime.ToString("F")">
-            <div class="date">
+        <li>
+            <div class="date" title="@gig.DateAndTime.ToString("F")">
                 <div class="month">@gig.DateAndTime.ToString("MMM")</div>
                 <div class="day">@gig.DateAndTime.ToString("d ")</div>
             </div>
@@ -18,10 +18,39 @@
                 <p class="genre">@gig.Genre.Name</p>
                 <div class="actions">
                     <a asp-action="Edit" asp-controller="Gigs" asp-route-gigId="@gig.Id" class="btn btn-default btn-xs">Edit</a>
-                    <button class="btn btn-default btn-xs">Delete</button>
+                    <a data-gig-id="@gig.Id" class="btn btn-default btn-xs js-cancel-gig">Cancel ?</a>
                 </div>
             </div>
         </li>
     }
 </ul>
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+
+            $(".js-cancel-gig").click(function (e) {
+
+                var button = $(e.target);
+
+                var msg = "Are you sure you cant to cancel this gigs?";
+
+                if (!confirm(msg)) { return; }
+
+                $.ajax({
+                    url: "/api/gigs/cancel?gigId=" + button.attr("data-gig-id"),
+                    method: "DELETE"
+                })
+                    .done(function () {
+                        button.closest("li").fadeOut(function () {
+                            $(this).remove();
+                        });
+                    })
+                    .fail(function (xhr, textStatus, errorThrown) {
+                        alert("Something went wrong");
+                    });
+            });
+        });
+    </script>
+}
 

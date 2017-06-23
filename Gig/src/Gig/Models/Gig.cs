@@ -25,5 +25,7 @@ namespace Gig.Models
         [Required]
         [StringLength(255)]
         public string Venue { get; set; }
+
+        public bool IsCancelled { get; set; }
     }
 }

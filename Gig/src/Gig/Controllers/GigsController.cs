@@ -126,7 +126,8 @@ namespace Gig.Controllers
 
             var gigs = _db.Gigs
                 .Include(g => g.Genre)
-                .Where(g => g.ArtistId == userId)
+                .Where(g => g.ArtistId == userId && g.DateAndTime > DateTime.Now &&
+                    g.IsCancelled == false)
                 .OrderByDescending(g => g.DateAndTime);
 
             return View(gigs);
