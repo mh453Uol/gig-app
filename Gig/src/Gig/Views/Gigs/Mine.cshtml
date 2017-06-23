@@ -14,10 +14,12 @@
                 <div class="day">@gig.DateAndTime.ToString("d ")</div>
             </div>
             <div class="detail">
-                <p class="artist">
-                    <b>@gig.Venue</b>
-                </p>
+                <p class="artist"><b>@gig.Venue</b></p>
                 <p class="genre">@gig.Genre.Name</p>
+                <div class="actions">
+                    <a asp-action="Edit" asp-controller="Gigs" asp-route-gigId="@gig.Id" class="btn btn-default btn-xs">Edit</a>
+                    <button class="btn btn-default btn-xs">Delete</button>
+                </div>
             </div>
         </li>
     }

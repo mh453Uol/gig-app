@@ -120,3 +120,11 @@ ul.calendar {
     filter: alpha(opacity = 60);
 }
 
+.calendar > li .actions {
+    display:none;
+}
+
+/*target calendar -> li on hover set .actions to visible*/
+.calendar > li:hover .actions{
+    display:block;
+}

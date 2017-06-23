@@ -9,6 +9,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace Gig.Controllers
 {
@@ -73,6 +74,48 @@ namespace Gig.Controllers
             gig.ArtistId = _userManager.GetUserId(User);
 
             _db.Add(gig);
+            await _db.SaveChangesAsync();
+            return RedirectToAction("Mine");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(Guid gigId)
+        {
+            if (gigId == Guid.Empty) { return NotFound(); }
+
+            var userId = _userManager.GetUserId(HttpContext.User);
+
+            var gig = await _db.Gigs
+                .AsNoTracking()
+                .SingleAsync(g => g.ArtistId == userId && g.Id == gigId);
+
+            var model = AutoMapper.Mapper.Map<Models.Gig,GigsFormViewModel>(gig);
+            model.Genres = await _db.Genres.ToListAsync();
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Update(GigsFormViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                model.Genres = await _db.Genres.ToListAsync();
+                return View("Edit", model);
+            }
+            var userId = _userManager.GetUserId(HttpContext.User);
+
+            var gig = await _db.Gigs
+                .AsNoTracking()
+                .SingleOrDefaultAsync(g => g.Id == model.Id && g.ArtistId == userId);
+
+            if(gig == null) { return NotFound();  }
+
+            var updatedGig = AutoMapper.Mapper.Map<GigsFormViewModel, Models.Gig>(model);
+            updatedGig.ArtistId = userId;
+
+            _db.Update(updatedGig);
             await _db.SaveChangesAsync();
             return RedirectToAction("Mine");
         }

@@ -20,8 +20,16 @@ namespace Gig.Helper.Mapping
                         options => options.MapFrom(src => src.DateAndTime()))
                     .ForMember(dest => dest.Genre,
                         options => options.Ignore());
+
+
+                config.CreateMap<Models.Gig, GigsFormViewModel>()
+                    .ForMember(dest => dest.Date,
+                        options => options.MapFrom(src => src.DateAndTime.ToString("dd MMM yyyy")))
+                    .ForMember(dest => dest.Time,
+                        options => options.MapFrom(src => src.DateAndTime.ToString("HH:mm")))
+                    .ForMember(dest => dest.Genre,
+                        options => options.MapFrom(src => src.GenreId));
                     
-                config.CreateMap<Models.Gig, GigsFormViewModel>();
             });
         }
     }

@@ -25,8 +25,9 @@ namespace Gig.Helper.Validation
             {
                 return ValidationResult.Success;
             }
-
-            return new ValidationResult("Date must be in the future");
+            
+            return new ValidationResult("Enter a date which is in the future e.g " +
+                DateTime.Now.AddDays(10).ToString("dd MMM yyyy"));
         }
 
         private static bool MergeAttribute(IDictionary<string,string> attributes, 

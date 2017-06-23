@@ -13,6 +13,7 @@ namespace Gig.Models.GigsViewModels
         {
             Genres = new List<Genre>();
         }
+        public Guid Id { get; set; }
 
         [Required]
         [StringLength(255)]

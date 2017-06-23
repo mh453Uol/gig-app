@@ -25,7 +25,7 @@ namespace Gig.Helper.Validation
                 return ValidationResult.Success;
             }
 
-            return new ValidationResult("Cant determine the time");
+            return new ValidationResult("Enter a valid time e.g 12:00");
         }
     }
 }
