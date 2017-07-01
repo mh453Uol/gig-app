@@ -33,16 +33,16 @@ namespace Gig.WebApiControllers
 
             var gig = await _db.Gigs
                 .AsNoTracking()
-                .FirstOrDefaultAsync(g => g.Id == model.GigId);
+                .FirstOrDefaultAsync(g => g.Id == model.GigId && !g.IsCancelled);
 
-            if(gig == null) { return BadRequest();  }
+            if (gig == null) { return BadRequest(); }
 
             var isAttending = await _db.Attendances
                 .AsNoTracking()
-                .AnyAsync(a => a.AttendeeId == userId && 
+                .AnyAsync(a => a.AttendeeId == userId &&
                 a.GigId == model.GigId);
 
-            if (isAttending) { return BadRequest("Your already attending this Gig");  }
+            if (isAttending) { return BadRequest("Your already attending this Gig"); }
 
             var attendance = new Attendance(userId, model.GigId);
             _db.Add(attendance);

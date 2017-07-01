@@ -21,12 +21,19 @@
             <div class="detail">
                 <p class="artist">
                     <b>@gig.Artist.FullName</b>
+                    @if (gig.IsCancelled)
+                    {
+                        <span class="label label-warning">CANCELLED!</span>
+                    }
                 </p>
                 <p class="genre">@gig.Genre.Name</p>
                 @if (Model.IsAuthenticated)
                 {
                     <button data-artist-id="@gig.ArtistId" class="btn btn-default btn-xs js-toggle-following">Follow Artist</button>
-                    <button data-gig-id="@gig.Id" class="btn btn-default btn-xs js-toggle-attendance">Going ?</button>
+                    @if (!gig.IsCancelled)
+                    {
+                        <button data-gig-id="@gig.Id" class="btn btn-default btn-xs js-toggle-attendance">Going ?</button>
+                    }
                 }
             </div>
         </li>

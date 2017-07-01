@@ -41,7 +41,7 @@ namespace Gig.WebApiControllers
 
             if (gig.IsCancelled || gig.DateAndTime < DateTime.Now)
             {
-                return BadRequest("Gig is already cancelled or a past gig");
+                return NotFound("Gig is already cancelled or a past gig");
             }
 
             gig.IsCancelled = true;
