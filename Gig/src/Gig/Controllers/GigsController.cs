@@ -39,13 +39,14 @@ namespace Gig.Controllers
                 .AsNoTracking()
                 .ToListAsync();
 
-            var model = new GigsViewModel() {
+            var model = new GigsViewModel()
+            {
                 IsAuthenticated = true,
                 UpcomingGigs = attending.Select(g => g.Gig).ToList(),
                 Heading = "Gigs I'm Attending"
             };
 
-            return View("_Gigs",model);
+            return View("_Gigs", model);
         }
 
         public async Task<IActionResult> Create()
@@ -89,7 +90,7 @@ namespace Gig.Controllers
                 .AsNoTracking()
                 .SingleAsync(g => g.ArtistId == userId && g.Id == gigId);
 
-            var model = AutoMapper.Mapper.Map<Models.Gig,GigsFormViewModel>(gig);
+            var model = AutoMapper.Mapper.Map<Models.Gig, GigsFormViewModel>(gig);
             model.Genres = await _db.Genres.ToListAsync();
 
             return View(model);
@@ -110,7 +111,7 @@ namespace Gig.Controllers
                 .AsNoTracking()
                 .SingleOrDefaultAsync(g => g.Id == model.Id && g.ArtistId == userId);
 
-            if(gig == null) { return NotFound();  }
+            if (gig == null) { return NotFound(); }
 
             var updatedGig = AutoMapper.Mapper.Map<GigsFormViewModel, Models.Gig>(model);
             updatedGig.ArtistId = userId;
@@ -120,17 +121,19 @@ namespace Gig.Controllers
             return RedirectToAction("Mine");
         }
 
-        public IActionResult Mine()
+        public async Task<IActionResult> Mine()
         {
             var userId = _userManager.GetUserId(HttpContext.User);
 
-            var gigs = _db.Gigs
+            var gigs = await _db.Gigs
                 .Include(g => g.Genre)
-                .Where(g => g.ArtistId == userId && g.DateAndTime > DateTime.Now &&
-                    g.IsCancelled == false)
-                .OrderByDescending(g => g.DateAndTime);
+                .Where(g => g.ArtistId == userId)
+                .OrderByDescending(g => g.DateAndTime)
+                .ToListAsync();
 
-            return View(gigs);
+            var model = new MineGigViewModel(gigs);
+
+            return View(model);
         }
     }
 }

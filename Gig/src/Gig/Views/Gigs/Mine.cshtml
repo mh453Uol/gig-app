@@ -1,29 +1,73 @@
-@model IEnumerable<Gig>
+@model MineGigViewModel
 @{
-    ViewData["Title"] = "My Upcoming Gigs";
+    ViewData["Title"] = "My Gigs";
 }
 
-<h2 class="voffset4">My Upcoming Gigs.</h2>
+<h2 class="voffset4">My Gigs.</h2>
 
-<ul class="calendar">
-    @foreach (var gig in Model)
-    {
-        <li>
-            <div class="date" title="@gig.DateAndTime.ToString("F")">
-                <div class="month">@gig.DateAndTime.ToString("MMM")</div>
-                <div class="day">@gig.DateAndTime.ToString("d ")</div>
-            </div>
-            <div class="detail">
-                <p class="artist"><b>@gig.Venue</b></p>
-                <p class="genre">@gig.Genre.Name</p>
-                <div class="actions">
-                    <a asp-action="Edit" asp-controller="Gigs" asp-route-gigId="@gig.Id" class="btn btn-default btn-xs">Edit</a>
-                    <a data-gig-id="@gig.Id" class="btn btn-default btn-xs js-cancel-gig">Cancel ?</a>
-                </div>
-            </div>
-        </li>
-    }
-</ul>
+
+<div class="row">
+    <div class="col-md-4 js-upcoming-gigs">
+        <h4 class="voffset4">Upcoming Gigs <span class="badge">@Model.UpcomingGigs.Count</span></h4>
+        <ul class="calendar">
+            @foreach (var gig in Model.UpcomingGigs)
+            {
+                <li>
+                    <div class="date" title="@gig.DateAndTime.ToString("F")">
+                        <div class="month">@gig.DateAndTime.ToString("MMM")</div>
+                        <div class="day">@gig.DateAndTime.ToString("d ")</div>
+                    </div>
+                    <div class="detail">
+                        <p class="artist"><b>@gig.Venue</b></p>
+                        <p class="genre">@gig.Genre.Name</p>
+                        <div class="actions">
+                            <a asp-action="Edit" asp-controller="Gigs" asp-route-gigId="@gig.Id" class="btn btn-default btn-xs">Edit</a>
+                            <a data-gig-id="@gig.Id" class="btn btn-default btn-xs js-cancel-gig">Cancel ?</a>
+                        </div>
+                    </div>
+                </li>
+            }
+        </ul>
+    </div>
+
+    <div class="col-md-4">
+        <h4 class="voffset4">Past Gigs <span class="badge">@Model.PastGigs.Count</span></h4>
+        <ul class="calendar">
+            @foreach (var gig in Model.PastGigs)
+            {
+                <li>
+                    <div class="date" title="@gig.DateAndTime.ToString("F")">
+                        <div class="month">@gig.DateAndTime.ToString("MMM")</div>
+                        <div class="day">@gig.DateAndTime.ToString("d ")</div>
+                    </div>
+                    <div class="detail">
+                        <p class="artist"><b>@gig.Venue</b></p>
+                        <p class="genre">@gig.Genre.Name</p>
+                    </div>
+                </li>
+            }
+        </ul>
+    </div>
+
+    <div class="col-md-4 js-cancelled-gigs">
+        <h4 class="voffset4">Cancelled Gigs <span class="badge">@Model.CancelledGigs.Count</span></h4>
+        <ul class="calendar">
+            @foreach (var gig in Model.CancelledGigs)
+            {
+                <li>
+                    <div class="date" title="@gig.DateAndTime.ToString("F")">
+                        <div class="month">@gig.DateAndTime.ToString("MMM")</div>
+                        <div class="day">@gig.DateAndTime.ToString("d ")</div>
+                    </div>
+                    <div class="detail">
+                        <p class="artist"><b>@gig.Venue</b></p>
+                        <p class="genre">@gig.Genre.Name</p>
+                    </div>
+                </li>
+            }
+        </ul>
+    </div>
+</div>
 
 @section Scripts{
     <script>
@@ -33,22 +77,47 @@
 
                 var button = $(e.target);
 
-                var msg = "Are you sure you cant to cancel this gigs?";
+                bootbox.confirm({
+                    title: "Cancel Gig?",
+                    message: "Are you sure you want to cancel this gig?",
+                    buttons: {
+                        cancel: {
+                            label: 'No',
+                            className: 'btn btn-primary'
+                        },
+                        confirm: {
+                            label: 'Yes',
+                            className: 'btn btn-danger'
+                        }
+                    }, callback: function (confirmed) {
 
-                if (!confirm(msg)) { return; }
+                        if (confirmed) {
+                            $.ajax({
+                                url: "/api/gigs/cancel?gigId=" + button.attr("data-gig-id"),
+                                method: "DELETE"
+                            })
+                                .done(function () {
+                                    var upcomingGigsHeading = $(".js-upcoming-gigs .voffset4 .badge").text();
+                                    var numberOfUpcomingGigs = parseInt(upcomingGigsHeading) - 1;
+                                    $(".js-upcoming-gigs .badge").text(numberOfUpcomingGigs);
 
-                $.ajax({
-                    url: "/api/gigs/cancel?gigId=" + button.attr("data-gig-id"),
-                    method: "DELETE"
-                })
-                    .done(function () {
-                        button.closest("li").fadeOut(function () {
-                            $(this).remove();
-                        });
-                    })
-                    .fail(function (xhr, textStatus, errorThrown) {
-                        alert("Something went wrong");
-                    });
+                                    var gig = button.closest("li")
+                                        .hide()
+                                        .appendTo(".js-cancelled-gigs .calendar")
+                                        .fadeIn("slow")
+                                        .find(".actions")
+                                        .hide();
+
+                                    var cancelledGigsHeading = $(".js-cancelled-gigs .voffset4 .badge").text();
+                                    var numberOfCancelledGigs = parseInt(cancelledGigsHeading) + 1;
+                                    $(".js-cancelled-gigs .badge").text(numberOfCancelledGigs);
+                                })
+                                .fail(function (xhr, textStatus, errorThrown) {
+                                    console.log("Failed");
+                                });
+                        }
+                    }
+                });
             });
         });
     </script>

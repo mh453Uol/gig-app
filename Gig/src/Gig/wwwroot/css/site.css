@@ -128,3 +128,9 @@ ul.calendar {
 .calendar > li:hover .actions{
     display:block;
 }
+
+h4 > .badge {
+    background-color: #ff4342;
+    color:white;
+    font-size: medium;
+}

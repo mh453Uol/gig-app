@@ -30,16 +30,19 @@ namespace Gig.WebApiControllers
         [HttpDelete]
         public async Task<IActionResult> Cancel(Guid gigId)
         {
-            if(gigId == Guid.Empty) { return BadRequest();  }
+            if (gigId == Guid.Empty) { return BadRequest(); }
 
             var userId = _userManager.GetUserId(HttpContext.User);
 
             var gig = _db.Gigs
                 .SingleOrDefault(g => g.Id == gigId && g.ArtistId == userId);
 
-            if(gig == null) { return BadRequest();  }
+            if (gig == null) { return BadRequest(); }
 
-            if (gig.IsCancelled) { return BadRequest("Gig is already cancelled");  }
+            if (gig.IsCancelled || gig.DateAndTime < DateTime.Now)
+            {
+                return BadRequest("Gig is already cancelled or a past gig");
+            }
 
             gig.IsCancelled = true;
 

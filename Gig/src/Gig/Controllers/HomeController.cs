@@ -33,7 +33,8 @@ namespace Gig.Controllers
             var upcomingGigs = await _db.Gigs
                 .Include(g => g.Artist)
                 .Include(g => g.Genre)
-                .Where(g => g.DateAndTime > DateTime.Now)
+                .Where(g => g.DateAndTime > DateTime.Now && 
+                g.IsCancelled == false)
                 .AsNoTracking()
                 .ToListAsync();
 
