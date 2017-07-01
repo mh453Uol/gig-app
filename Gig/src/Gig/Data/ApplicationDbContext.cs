@@ -15,6 +15,8 @@ namespace Gig.Data
         public DbSet<Genre> Genres { get; set; }
         public DbSet<Attendance> Attendances { get; set; }
         public DbSet<Following> Followers { get; set; }
+        public DbSet<Notification> Notification { get; set; }
+        public DbSet<UserNotification> UserNotification { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -43,7 +45,7 @@ namespace Gig.Data
 
             //Manually configure many to many relationship
             builder.Entity<Following>()
-                .HasKey(f => new {  f.FollowerId, f.FolloweeId });
+                .HasKey(f => new { f.FollowerId, f.FolloweeId });
 
             builder.Entity<Following>()
                 .HasOne(f => f.Follower)
@@ -69,6 +71,29 @@ namespace Gig.Data
                 .WithOne(u => u.Follower)
                 .OnDelete(Microsoft.EntityFrameworkCore.Metadata.DeleteBehavior.Restrict);
             //End
+
+            builder.Entity<UserNotification>()
+                .HasKey(n => new { n.NotificationId, n.UserId });
+
+            builder.Entity<UserNotification>()
+                .HasOne(u => u.User)
+                .WithMany()
+                .HasForeignKey(u => u.UserId)
+                .OnDelete(Microsoft.EntityFrameworkCore.Metadata.DeleteBehavior.Restrict);
+
+            builder.Entity<UserNotification>()
+                .HasOne(u => u.Notification)
+                .WithMany()
+                .HasForeignKey(u => u.NotificationId)
+                .OnDelete(Microsoft.EntityFrameworkCore.Metadata.DeleteBehavior.Restrict);
+
+            builder.Entity<Notification>()
+                .HasOne(n => n.Gig)
+                .WithMany()
+                .HasForeignKey(n => n.GigId)
+                .OnDelete(Microsoft.EntityFrameworkCore.Metadata.DeleteBehavior.Restrict);
+
+
 
             base.OnModelCreating(builder);
         }

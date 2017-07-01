@@ -120,6 +120,7 @@
     <Folder Include="Migrations\" />
     <Folder Include="Migrations\" />
     <Folder Include="Models\HomeViewModels\" />
+    <Folder Include="Models\NotificationViewModels\" />
   </ItemGroup>
 
   <ItemGroup>
