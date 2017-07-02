@@ -8,6 +8,7 @@ using Gig.Data;
 using Gig.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
 
 namespace Gig.WebApiControllers
 {
@@ -47,6 +48,34 @@ namespace Gig.WebApiControllers
             gig.IsCancelled = true;
 
             _db.Update(gig);
+
+            var notification = new Notification()
+            {
+                DateTime = DateTime.Now,
+                GigId = gig.Id,
+                Type = NotificationType.GigCancelled
+            };
+
+            _db.Add(notification);
+
+            var attendees = await _db.Attendances
+                .Where(f => f.GigId == gig.Id)
+                .Select(f => f.Attendee)
+                .ToListAsync();
+
+            var userNotifications = new List<UserNotification>();
+
+            foreach (var attendee in attendees)
+            {
+                userNotifications.Add(new UserNotification()
+                {
+                    NotificationId = notification.Id,
+                    UserId = attendee.Id
+                });
+            }
+
+            _db.AddRange(userNotifications);
+
             await _db.SaveChangesAsync();
 
             return Ok();
