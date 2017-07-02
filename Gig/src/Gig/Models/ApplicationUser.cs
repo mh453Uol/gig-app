@@ -13,11 +13,13 @@ namespace Gig.Models
     {
         public ICollection<Following> Followers { get; set; }
         public ICollection<Following> Followees { get; set; }
+        public ICollection<UserNotification> Notification { get; set; }
 
         public ApplicationUser()
         {
             Followers = new Collection<Following>();
             Followees = new Collection<Following>();
+            Notification = new Collection<UserNotification>();
         }
 
         [Required]
@@ -36,6 +38,9 @@ namespace Gig.Models
             }
         }
 
-        //public IEnumerable<Attendance> Attendances { get; set; }
+        public void Notify(Notification notification)
+        {
+            Notification.Add(new UserNotification(Id, notification.Id));
+        }
     }
 }

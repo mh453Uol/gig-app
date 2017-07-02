@@ -9,6 +9,13 @@ namespace Gig.Models
 {
     public class UserNotification
     {
+        public UserNotification(string userId, int notificationId)
+        {
+            if (String.IsNullOrEmpty(userId)) new ArgumentException("User Id is not valid");
+            this.UserId = userId;
+            this.NotificationId = notificationId;
+        }
+
         public bool IsRead { get; set; }
 
         [Required]

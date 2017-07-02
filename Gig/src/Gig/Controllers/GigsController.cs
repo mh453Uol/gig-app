@@ -77,32 +77,16 @@ namespace Gig.Controllers
             _db.Add(gig);
 
             var followers = _db.Followers.Where(f => f.FolloweeId == user && !f.IsDeleted)
-                .Select(f => f.FollowerId)
-                .AsNoTracking();
+                .Select(f => f.Follower);
 
-            var notification = new Notification()
-            {
-                DateTime = DateTime.Now,
-                GigId = gig.Id,
-                Type = NotificationType.GigCreated
-            };
+            var notification = new Notification(gig.Id, NotificationType.GigCreated);
 
             _db.Add(notification);
 
-
-            var userNotifications = new List<UserNotification>();
-
-            foreach (var followeer in followers)
+            foreach (var follower in followers)
             {
-                userNotifications.Add(new UserNotification()
-                {
-                    IsRead = false,
-                    NotificationId = notification.Id,
-                    UserId = followeer
-                });
+                follower.Notify(notification);
             }
-
-            _db.AddRange(userNotifications);
 
             await _db.SaveChangesAsync();
             return RedirectToAction("Mine");

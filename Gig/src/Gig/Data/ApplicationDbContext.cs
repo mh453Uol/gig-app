@@ -77,7 +77,7 @@ namespace Gig.Data
 
             builder.Entity<UserNotification>()
                 .HasOne(u => u.User)
-                .WithMany()
+                .WithMany(u => u.Notification)
                 .HasForeignKey(u => u.UserId)
                 .OnDelete(Microsoft.EntityFrameworkCore.Metadata.DeleteBehavior.Restrict);
 

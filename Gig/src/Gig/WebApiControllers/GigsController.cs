@@ -49,12 +49,7 @@ namespace Gig.WebApiControllers
 
             _db.Update(gig);
 
-            var notification = new Notification()
-            {
-                DateTime = DateTime.Now,
-                GigId = gig.Id,
-                Type = NotificationType.GigCancelled
-            };
+            var notification = new Notification(gig.Id, NotificationType.GigCancelled);
 
             _db.Add(notification);
 
@@ -63,18 +58,10 @@ namespace Gig.WebApiControllers
                 .Select(f => f.Attendee)
                 .ToListAsync();
 
-            var userNotifications = new List<UserNotification>();
-
             foreach (var attendee in attendees)
             {
-                userNotifications.Add(new UserNotification()
-                {
-                    NotificationId = notification.Id,
-                    UserId = attendee.Id
-                });
+                attendee.Notify(notification);
             }
-
-            _db.AddRange(userNotifications);
 
             await _db.SaveChangesAsync();
 

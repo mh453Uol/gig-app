@@ -12,7 +12,7 @@ namespace Gig.Models
 
         }
 
-        public Attendance(string userId,Guid gigId)
+        public Attendance(string userId, Guid gigId)
         {
             AttendeeId = userId;
             GigId = gigId;
@@ -29,5 +29,6 @@ namespace Gig.Models
 
         [ForeignKey("AttendeeId")]
         public ApplicationUser Attendee { get; set; }
+
     }
 }

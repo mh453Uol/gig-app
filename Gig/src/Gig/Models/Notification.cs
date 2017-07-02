@@ -9,6 +9,19 @@ namespace Gig.Models
 {
     public class Notification
     {
+        public Notification(Guid gigId, NotificationType type)
+        {
+            if (GigId == Guid.Empty) new ArgumentException("Empty Gig Id");
+            this.GigId = gigId;
+            this.Type = type;
+            DateTime = DateTime.Now;
+        }
+
+        protected Notification()
+        {
+
+        }
+
         public int Id { get; set; }
 
         [Required]
@@ -20,8 +33,8 @@ namespace Gig.Models
 
         [ForeignKey("Gig")]
         [Required]
-        public Guid GigId { get; set; }
+        public Guid GigId { get; private set; }
 
-        public Gig Gig { get; set; }
+        public Gig Gig { get; private set; }
     }
 }
