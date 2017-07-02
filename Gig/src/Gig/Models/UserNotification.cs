@@ -9,6 +9,11 @@ namespace Gig.Models
 {
     public class UserNotification
     {
+        protected UserNotification()
+        {
+
+        }
+
         public UserNotification(string userId, int notificationId)
         {
             if (String.IsNullOrEmpty(userId)) new ArgumentException("User Id is not valid");

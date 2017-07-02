@@ -1,0 +1,18 @@
+@model IEnumerable<UserNotification>
+
+<li class="dropdown">
+    <a class="btn btn-group dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+        <span>Notification</span>
+        <span class="label label-primary">@Model.Count()</span>
+    </a>
+
+    <ul class="dropdown-menu">
+        @foreach (var notification in Model)
+        {
+            <li>
+                <a href="#">Test</a>
+            </li>
+            <li role="separator" class="divider"></li>
+        }
+    </ul>
+</li>

@@ -129,8 +129,15 @@ ul.calendar {
     display:block;
 }
 
-h4 > .badge {
+.badge-heading {
     background-color: #ff4342;
     color:white;
     font-size: medium;
+}
+
+.badge-notify {
+    background: red;
+    position: relative;
+    top: -10px;
+    left: -15px;
 }
