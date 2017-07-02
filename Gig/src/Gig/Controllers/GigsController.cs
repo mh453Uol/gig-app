@@ -70,11 +70,40 @@ namespace Gig.Controllers
                 model.Genres = await _db.Genres.ToListAsync();
                 return View(model);
             }
-
+            var user = _userManager.GetUserId(User);
             var gig = AutoMapper.Mapper.Map<GigsFormViewModel, Models.Gig>(model);
-            gig.ArtistId = _userManager.GetUserId(User);
+            gig.ArtistId = user;
 
             _db.Add(gig);
+
+            var followers = _db.Followers.Where(f => f.FolloweeId == user && !f.IsDeleted)
+                .Select(f => f.FollowerId)
+                .AsNoTracking();
+
+            var notification = new Notification()
+            {
+                DateTime = DateTime.Now,
+                GigId = gig.Id,
+                Type = NotificationType.GigCreated
+            };
+
+            _db.Add(notification);
+
+
+            var userNotifications = new List<UserNotification>();
+
+            foreach (var followeer in followers)
+            {
+                userNotifications.Add(new UserNotification()
+                {
+                    IsRead = false,
+                    NotificationId = notification.Id,
+                    UserId = followeer
+                });
+            }
+
+            _db.AddRange(userNotifications);
+
             await _db.SaveChangesAsync();
             return RedirectToAction("Mine");
         }
@@ -128,7 +157,7 @@ namespace Gig.Controllers
             var gigs = await _db.Gigs
                 .Include(g => g.Genre)
                 .Where(g => g.ArtistId == userId)
-                .OrderByDescending(g => g.DateAndTime)
+                .OrderBy(g => g.DateAndTime)
                 .ToListAsync();
 
             var model = new MineGigViewModel(gigs);
