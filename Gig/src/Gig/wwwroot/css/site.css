@@ -135,9 +135,6 @@ ul.calendar {
     font-size: medium;
 }
 
-.badge-notify {
-    background: red;
-    position: relative;
-    top: -10px;
-    left: -15px;
+.js-notification-button:hover > .js-notification-button-label {
+    background-color: blue;
 }

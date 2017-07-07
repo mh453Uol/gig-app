@@ -19,7 +19,7 @@ namespace Gig.Models
 
         protected Notification()
         {
-
+            Type = NotificationType.GigCreated;
         }
 
         public int Id { get; set; }
@@ -36,5 +36,37 @@ namespace Gig.Models
         public Guid GigId { get; private set; }
 
         public Gig Gig { get; private set; }
+
+        public override string ToString()
+        {
+            var message = "";
+            switch (Type)
+            {
+                case NotificationType.GigCancelled:
+                    message = String.Format(@"{0} has cancelled
+                    the gig at {1} on {2} at {3}",
+                    Gig.Artist.FullName,
+                    Gig.Venue,
+                    Gig.DateAndTime.ToString("dd MMM yyyy"),
+                    Gig.DateAndTime.ToString("HH tt"));
+                    break;
+                case NotificationType.GigUpdated:
+                    message = String.Format(@"{0} has changed 
+                    the date of the gig at {1} from {2} to {3}",
+                    Gig.Artist.FullName,
+                    Gig.Venue,
+                    Gig.DateAndTime.ToString("dd MMM yyyy hh tt"),
+                    DateTime.ToString("dd MMM yyyy hh tt"));
+                    break;
+                default:
+                    message = String.Format("{0} is performing at {1} at {2}",
+                        Gig.Artist.FullName,
+                        Gig.Venue,
+                        Gig.DateAndTime.ToString("dd MMM yyyy"));
+                    break;
+            }
+            return message;
+        }
     }
 }
+

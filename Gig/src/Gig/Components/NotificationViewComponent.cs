@@ -25,13 +25,32 @@ namespace Gig.Components
         public async Task<IViewComponentResult> InvokeAsync()
         {
             var userId = _userManager.GetUserId(HttpContext.User);
+            var isUnreadNotificaiton = true;
 
-            var notifications = await _db.UserNotification
+            var notification = await _db.UserNotification
                 .Include(n => n.Notification)
+                    .ThenInclude(n => n.Gig)
+                    .ThenInclude(n => n.Artist)
                 .Where(n => n.UserId == userId && !n.IsRead)
+                .AsNoTracking()
                 .ToListAsync();
 
-            return View("Notification", notifications);
+            if (notification.Count() == 0)
+            {
+                notification = await _db.UserNotification
+                    .Include(n => n.Notification)
+                        .ThenInclude(n => n.Gig)
+                        .ThenInclude(n => n.Artist)
+                    .Take(5)
+                    .OrderByDescending(n => n.Notification.DateTime)
+                    .AsNoTracking()
+                    .ToListAsync();
+
+                isUnreadNotificaiton = false;
+            }
+
+            ViewBag.IsUnreadNotification = isUnreadNotificaiton;
+            return View("Notification", notification);
         }
     }
 }

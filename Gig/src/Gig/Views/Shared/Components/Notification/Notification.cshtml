@@ -1,16 +1,27 @@
 @model IEnumerable<UserNotification>
 
 <li class="dropdown">
-    <a class="btn btn-group dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+    <a class="btn btn-group dropdown-toggle js-notification-button" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" data-is-unread-notifications="@Json.Serialize(@ViewBag.IsUnreadNotification)">
         <span>Notification</span>
-        <span class="label label-primary">@Model.Count()</span>
+        @if (ViewBag.IsUnreadNotification)
+        {
+            if (Model.Count() > 9)
+            {
+
+                <span class="label label-primary js-notification-button-label">9 +</span>
+            }
+            else
+            {
+                <span class="label label-primary js-notification-label">@Model.Count()</span>
+            }
+        }
     </a>
 
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu js-notifications">
         @foreach (var notification in Model)
-        {
-            <li>
-                <a href="#">Test</a>
+            {
+            <li data-notification-id="@notification.NotificationId">
+                <a href="#">@notification.Notification.ToString()</a>
             </li>
             <li role="separator" class="divider"></li>
         }
