@@ -22,12 +22,13 @@ namespace Gig.Models
             Type = NotificationType.GigCreated;
         }
 
-        public int Id { get; set; }
+        [Key]
+        public int Id { get; private set; }
 
         [Required]
-        public DateTime DateTime { get; set; }
+        public DateTime DateTime { get; private set; }
 
-        public NotificationType Type { get; set; }
+        public NotificationType Type { get; private set; }
         public DateTime? OriginalDateTime { get; set; }
         public string OriginalVenue { get; set; }
 

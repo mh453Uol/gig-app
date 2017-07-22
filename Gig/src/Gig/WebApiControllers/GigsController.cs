@@ -36,35 +36,20 @@ namespace Gig.WebApiControllers
             var userId = _userManager.GetUserId(HttpContext.User);
 
             var gig = _db.Gigs
+                .Include(g => g.Attendances)
+                    .ThenInclude(e => e.Attendee)
                 .SingleOrDefault(g => g.Id == gigId && g.ArtistId == userId);
 
             if (gig == null) { return BadRequest(); }
 
-            if (gig.IsCancelled || gig.DateAndTime < DateTime.Now)
+            if (gig.CantCancel())
             {
                 return NotFound("Gig is already cancelled or a past gig");
             }
 
-            gig.IsCancelled = true;
-
-            _db.Update(gig);
-
-            var notification = new Notification(gig.Id, NotificationType.GigCancelled);
-
-            _db.Add(notification);
-
-            var attendees = await _db.Attendances
-                .Where(f => f.GigId == gig.Id)
-                .Select(f => f.Attendee)
-                .ToListAsync();
-
-            foreach (var attendee in attendees)
-            {
-                attendee.Notify(notification);
-            }
+            gig.Cancel();
 
             await _db.SaveChangesAsync();
-
             return Ok();
         }
     }

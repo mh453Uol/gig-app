@@ -1,11 +1,20 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 
 namespace Gig.Models
 {
     public class Gig
     {
+        public Gig()
+        {
+            Attendances = new Collection<Attendance>();
+            Notification = new Collection<Notification>();
+        }
+
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
@@ -26,6 +35,31 @@ namespace Gig.Models
         [StringLength(255)]
         public string Venue { get; set; }
 
-        public bool IsCancelled { get; set; }
+        public bool IsCancelled { get; private set; }
+        public ICollection<Attendance> Attendances { get; set; }
+        public ICollection<Notification> Notification { get; set; }
+
+        public void Cancel()
+        {
+            IsCancelled = true;
+
+            var notification = new Notification(Id, NotificationType.GigCancelled);
+
+            Notification.Add(notification);
+
+            foreach (var attendee in Attendances.Select(f => f.Attendee))
+            {
+                attendee.Notify(notification);
+            }
+        }
+
+        public bool CantCancel()
+        {
+            if (IsCancelled || DateAndTime < DateTime.Now)
+            {
+                return true;
+            }
+            return false;
+        }
     }
 }

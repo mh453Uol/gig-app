@@ -14,25 +14,25 @@ namespace Gig.Models
 
         }
 
-        public UserNotification(string userId, int notificationId)
+        public UserNotification(string userId, Notification notification)
         {
             if (String.IsNullOrEmpty(userId)) new ArgumentException("User Id is not valid");
             this.UserId = userId;
-            this.NotificationId = notificationId;
+            this.Notification = notification;
         }
 
         public bool IsRead { get; set; }
 
         [Required]
         [ForeignKey("User")]
-        public string UserId { get; set; }
-        public ApplicationUser User { get; set; }
+        public string UserId { get; private set; }
+        public ApplicationUser User { get; private set; }
 
         [Required]
         [ForeignKey("Notification")]
-        public int NotificationId { get; set; }
+        public int NotificationId { get; private set; }
 
-        public Notification Notification { get; set; }
+        public Notification Notification { get; private set; }
 
     }
 }

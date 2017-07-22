@@ -35,7 +35,7 @@ namespace Gig.Data
 
             builder.Entity<Attendance>()
                 .HasOne(a => a.Gig)
-                .WithMany()
+                .WithMany(a => a.Attendances)
                 .HasForeignKey(a => a.GigId);
 
             builder.Entity<Attendance>()
@@ -89,7 +89,7 @@ namespace Gig.Data
 
             builder.Entity<Notification>()
                 .HasOne(n => n.Gig)
-                .WithMany()
+                .WithMany(g => g.Notification)
                 .HasForeignKey(n => n.GigId)
                 .OnDelete(Microsoft.EntityFrameworkCore.Metadata.DeleteBehavior.Restrict);
 

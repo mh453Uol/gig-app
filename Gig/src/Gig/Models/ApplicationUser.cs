@@ -40,7 +40,7 @@ namespace Gig.Models
 
         public void Notify(Notification notification)
         {
-            Notification.Add(new UserNotification(Id, notification.Id));
+            Notification.Add(new UserNotification(Id, notification));
         }
     }
 }

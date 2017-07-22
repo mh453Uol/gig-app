@@ -9,8 +9,8 @@ using Gig.Models;
 namespace Gig.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20170702115315_AddedNotificationToUserTable")]
-    partial class AddedNotificationToUserTable
+    [Migration("20170722093303_AddedPropertiesToGig")]
+    partial class AddedPropertiesToGig
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -302,7 +302,7 @@ namespace Gig.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Gig.Models.Gig", "Gig")
-                        .WithMany()
+                        .WithMany("Attendances")
                         .HasForeignKey("GigId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
@@ -333,7 +333,7 @@ namespace Gig.Migrations
             modelBuilder.Entity("Gig.Models.Notification", b =>
                 {
                     b.HasOne("Gig.Models.Gig", "Gig")
-                        .WithMany()
+                        .WithMany("Notification")
                         .HasForeignKey("GigId");
                 });
 

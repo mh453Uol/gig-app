@@ -301,7 +301,7 @@ namespace Gig.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Gig.Models.Gig", "Gig")
-                        .WithMany()
+                        .WithMany("Attendances")
                         .HasForeignKey("GigId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
@@ -332,7 +332,7 @@ namespace Gig.Migrations
             modelBuilder.Entity("Gig.Models.Notification", b =>
                 {
                     b.HasOne("Gig.Models.Gig", "Gig")
-                        .WithMany()
+                        .WithMany("Notification")
                         .HasForeignKey("GigId");
                 });
 
