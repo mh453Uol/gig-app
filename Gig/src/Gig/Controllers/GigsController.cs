@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using System;
+using AutoMapper;
 
 namespace Gig.Controllers
 {
@@ -121,15 +122,22 @@ namespace Gig.Controllers
             var userId = _userManager.GetUserId(HttpContext.User);
 
             var gig = await _db.Gigs
-                .AsNoTracking()
+                .Include(g => g.Attendances)
+                    .ThenInclude(g => g.Attendee)
                 .SingleOrDefaultAsync(g => g.Id == model.Id && g.ArtistId == userId);
+
 
             if (gig == null) { return NotFound(); }
 
-            var updatedGig = AutoMapper.Mapper.Map<GigsFormViewModel, Models.Gig>(model);
-            updatedGig.ArtistId = userId;
+            Mapper.Map<GigsFormViewModel, Models.Gig>(model, gig);
 
-            _db.Update(updatedGig);
+            if (gig.CantCancel())
+            {
+                return BadRequest("Gig is cancelled or a past gig so you cant update");
+            }
+
+            gig.Updated();
+
             await _db.SaveChangesAsync();
             return RedirectToAction("Mine");
         }

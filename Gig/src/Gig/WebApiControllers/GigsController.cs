@@ -44,7 +44,7 @@ namespace Gig.WebApiControllers
 
             if (gig.CantCancel())
             {
-                return NotFound("Gig is already cancelled or a past gig");
+                return BadRequest("Gig is already cancelled or a past gig");
             }
 
             gig.Cancel();

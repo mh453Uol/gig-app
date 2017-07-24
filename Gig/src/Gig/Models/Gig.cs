@@ -47,10 +47,8 @@ namespace Gig.Models
 
             Notification.Add(notification);
 
-            foreach (var attendee in Attendances.Select(f => f.Attendee))
-            {
-                attendee.Notify(notification);
-            }
+            Attendances.Select(f => f.Attendee).ToList()
+                .ForEach(a => a.Notify(notification));
         }
 
         public bool CantCancel()
@@ -60,6 +58,16 @@ namespace Gig.Models
                 return true;
             }
             return false;
+        }
+
+        public void Updated()
+        {
+            var notification = new Notification(Id, NotificationType.GigUpdated);
+
+            Notification.Add(notification);
+
+            Attendances.Select(f => f.Attendee).ToList().
+                ForEach(a => a.Notify(notification));
         }
     }
 }
