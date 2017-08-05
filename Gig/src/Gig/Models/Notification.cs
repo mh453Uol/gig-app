@@ -9,12 +9,31 @@ namespace Gig.Models
 {
     public class Notification
     {
-        public Notification(Guid gigId, NotificationType type)
+        private Notification(Guid gigId, NotificationType type)
         {
             if (GigId == Guid.Empty) new ArgumentException("Empty Gig Id");
             this.GigId = gigId;
             this.Type = type;
             DateTime = DateTime.Now;
+        }
+
+        public static Notification GigCreated(Guid gigId)
+        {
+            return new Notification(gigId, NotificationType.GigCreated);
+        }
+
+        public static Notification GigCancelled(Guid gigId)
+        {
+            return new Notification(gigId, NotificationType.GigCancelled);
+        }
+
+        public static Notification GigUpdated(Guid gigId, DateTime originalDateTime, string originalVenue)
+        {
+            var notification = new Notification(gigId, NotificationType.GigUpdated);
+            notification.OriginalDateTime = originalDateTime;
+            notification.OriginalVenue = originalVenue;
+
+            return notification;
         }
 
         protected Notification()
@@ -29,8 +48,8 @@ namespace Gig.Models
         public DateTime DateTime { get; private set; }
 
         public NotificationType Type { get; private set; }
-        public DateTime? OriginalDateTime { get; set; }
-        public string OriginalVenue { get; set; }
+        public DateTime? OriginalDateTime { get; private set; }
+        public string OriginalVenue { get; private set; }
 
         [ForeignKey("Gig")]
         [Required]
@@ -56,8 +75,8 @@ namespace Gig.Models
                     the date of the gig at {1} from {2} to {3}",
                     Gig.Artist.FullName,
                     Gig.Venue,
-                    Gig.DateAndTime.ToString("dd MMM yyyy hh tt"),
-                    DateTime.ToString("dd MMM yyyy hh tt"));
+                    OriginalDateTime.Value.ToString("dd MMM yyyy hh tt"),
+                    Gig.DateAndTime.ToString("dd MMM yyyy hh tt"));
                     break;
                 default:
                     message = String.Format("{0} is performing at {1} at {2}",

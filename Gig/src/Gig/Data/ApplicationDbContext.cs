@@ -89,7 +89,7 @@ namespace Gig.Data
 
             builder.Entity<Notification>()
                 .HasOne(n => n.Gig)
-                .WithMany(g => g.Notification)
+                .WithMany(g => g.Notifications)
                 .HasForeignKey(n => n.GigId)
                 .OnDelete(Microsoft.EntityFrameworkCore.Metadata.DeleteBehavior.Restrict);
 

@@ -71,23 +71,20 @@ namespace Gig.Controllers
                 model.Genres = await _db.Genres.ToListAsync();
                 return View(model);
             }
-            var user = _userManager.GetUserId(User);
+            var userId = _userManager.GetUserId(User);
+
+            var user = _userManager.Users
+                .Include(u => u.Followees)
+                    .ThenInclude(u => u.Follower)
+                .FirstOrDefault(u => u.Id == userId);
+
             var gig = AutoMapper.Mapper.Map<GigsFormViewModel, Models.Gig>(model);
-            gig.ArtistId = user;
+
+            gig.Artist = user;
+
+            gig.Created();
 
             _db.Add(gig);
-
-            var followers = _db.Followers.Where(f => f.FolloweeId == user && !f.IsDeleted)
-                .Select(f => f.Follower);
-
-            var notification = new Notification(gig.Id, NotificationType.GigCreated);
-
-            _db.Add(notification);
-
-            foreach (var follower in followers)
-            {
-                follower.Notify(notification);
-            }
 
             await _db.SaveChangesAsync();
             return RedirectToAction("Mine");
@@ -126,7 +123,6 @@ namespace Gig.Controllers
                     .ThenInclude(g => g.Attendee)
                 .SingleOrDefaultAsync(g => g.Id == model.Id && g.ArtistId == userId);
 
-
             if (gig == null) { return NotFound(); }
 
             Mapper.Map<GigsFormViewModel, Models.Gig>(model, gig);
@@ -136,7 +132,7 @@ namespace Gig.Controllers
                 return BadRequest("Gig is cancelled or a past gig so you cant update");
             }
 
-            gig.Updated();
+            gig.Updated(model.DateAndTime(), model.Venue);
 
             await _db.SaveChangesAsync();
             return RedirectToAction("Mine");

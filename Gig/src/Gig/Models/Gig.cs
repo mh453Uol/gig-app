@@ -12,7 +12,7 @@ namespace Gig.Models
         public Gig()
         {
             Attendances = new Collection<Attendance>();
-            Notification = new Collection<Notification>();
+            Notifications = new Collection<Notification>();
         }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -37,15 +37,26 @@ namespace Gig.Models
 
         public bool IsCancelled { get; private set; }
         public ICollection<Attendance> Attendances { get; set; }
-        public ICollection<Notification> Notification { get; set; }
+        public ICollection<Notification> Notifications { get; set; }
 
-        public void Cancel()
+        public void Created()
+        {
+            var notification = Notification.GigCreated(Id);
+
+            Notifications.Add(notification);
+
+            Artist.Followees.Where(f => f.IsDeleted = false)
+                .Select(f => f.Follower).ToList()
+                .ForEach(f => f.Notify(notification));
+        }
+
+        public void Cancelled()
         {
             IsCancelled = true;
 
-            var notification = new Notification(Id, NotificationType.GigCancelled);
+            var notification = Notification.GigCancelled(Id);
 
-            Notification.Add(notification);
+            Notifications.Add(notification);
 
             Attendances.Select(f => f.Attendee).ToList()
                 .ForEach(a => a.Notify(notification));
@@ -60,11 +71,11 @@ namespace Gig.Models
             return false;
         }
 
-        public void Updated()
+        public void Updated(DateTime originalDateTime, string originalVenue)
         {
-            var notification = new Notification(Id, NotificationType.GigUpdated);
+            var notification = Notification.GigUpdated(Id, originalDateTime, originalVenue);
 
-            Notification.Add(notification);
+            Notifications.Add(notification);
 
             Attendances.Select(f => f.Attendee).ToList().
                 ForEach(a => a.Notify(notification));

@@ -47,7 +47,7 @@ namespace Gig.WebApiControllers
                 return BadRequest("Gig is already cancelled or a past gig");
             }
 
-            gig.Cancel();
+            gig.Cancelled();
 
             await _db.SaveChangesAsync();
             return Ok();
