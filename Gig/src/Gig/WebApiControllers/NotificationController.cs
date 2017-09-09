@@ -8,11 +8,16 @@ using Gig.Data;
 using Gig.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
+using Newtonsoft.Json;
+using Gig.Dtos;
 
 namespace Gig.WebApiControllers
 {
-    [Produces("application/json")]
+
+    [Authorize]
     [Route("api/Notification")]
+    [Produces("application/json")]
     public class NotificationController : Controller
     {
         private readonly ApplicationDbContext _db;
@@ -25,8 +30,28 @@ namespace Gig.WebApiControllers
             this._userManager = userManager;
         }
 
+        [HttpGet]
+        [Route("GetNewNotifications")]
+        public ActionResult GetNewNotifications()
+        {
+            var userId = _userManager.GetUserId(HttpContext.User);
+
+            var notifications = _db.UserNotification
+                .Where(u => u.UserId == userId && !u.IsRead)
+                .Include(u => u.Notification)
+                    .ThenInclude(u => u.Gig.Artist)
+                .AsNoTracking()
+                .ToList();
+
+            var notificationsForUser = notifications.Select(n => n.Notification)
+                .ToList();
+
+            return Ok(AutoMapper.Mapper.Map<IEnumerable<NotificationDto>>
+                (notificationsForUser));
+        }
+
         [HttpPost]
-        [Route("seen")]
+        [Route("Seen")]
         public async Task<IActionResult> Seen(List<int> notifications)
         {
 

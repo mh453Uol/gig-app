@@ -62,6 +62,18 @@ textarea {
     background-color:rgba(205,40,39,0.55);
 }
 
+.notifications {
+    position: relative;
+}
+
+.notifications .badge {
+    position: absolute;
+    top: 15px;
+    left: 30px;
+    background: #255271;
+    color: white;
+} 
+
 ul.calendar {
     padding-left:0;
     list-style: none;
@@ -136,5 +148,5 @@ ul.calendar {
 }
 
 .js-notification-button:hover > .js-notification-button-label {
-    background-color: blue;
+    background-color: white;
 }

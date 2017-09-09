@@ -12,68 +12,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="wwwroot\css\site.css" />
-    <Content Include="wwwroot\css\site.min.css" />
-    <Content Include="wwwroot\favicon.ico" />
-    <Content Include="wwwroot\images\banner1.svg" />
-    <Content Include="wwwroot\images\banner2.svg" />
-    <Content Include="wwwroot\images\banner3.svg" />
-    <Content Include="wwwroot\images\banner4.svg" />
-    <Content Include="wwwroot\js\site.js" />
-    <Content Include="wwwroot\js\site.min.js" />
-    <Content Include="wwwroot\lib\bootbox.js\.gitignore" />
-    <Content Include="wwwroot\lib\bootbox.js\.jshintrc" />
-    <Content Include="wwwroot\lib\bootbox.js\.npmignore" />
-    <Content Include="wwwroot\lib\bootbox.js\.travis.yml" />
-    <Content Include="wwwroot\lib\bootbox.js\bootbox.js" />
-    <Content Include="wwwroot\lib\bootbox.js\CONTRIBUTING.md" />
-    <Content Include="wwwroot\lib\bootbox.js\LICENSE.md" />
-    <Content Include="wwwroot\lib\bootbox.js\README.md" />
-    <Content Include="wwwroot\lib\bootstrap\dist\css\bootstrap-theme.css" />
-    <Content Include="wwwroot\lib\bootstrap\dist\css\bootstrap-theme.css.map" />
-    <Content Include="wwwroot\lib\bootstrap\dist\css\bootstrap-theme.min.css" />
-    <Content Include="wwwroot\lib\bootstrap\dist\css\bootstrap-theme.min.css.map" />
-    <Content Include="wwwroot\lib\bootstrap\dist\css\bootstrap.css" />
-    <Content Include="wwwroot\lib\bootstrap\dist\css\bootstrap.css.map" />
-    <Content Include="wwwroot\lib\bootstrap\dist\css\bootstrap.min.css" />
-    <Content Include="wwwroot\lib\bootstrap\dist\css\bootstrap.min.css.map" />
-    <Content Include="wwwroot\lib\bootstrap\dist\fonts\glyphicons-halflings-regular.eot" />
-    <Content Include="wwwroot\lib\bootstrap\dist\fonts\glyphicons-halflings-regular.svg" />
-    <Content Include="wwwroot\lib\bootstrap\dist\fonts\glyphicons-halflings-regular.ttf" />
-    <Content Include="wwwroot\lib\bootstrap\dist\fonts\glyphicons-halflings-regular.woff" />
-    <Content Include="wwwroot\lib\bootstrap\dist\fonts\glyphicons-halflings-regular.woff2" />
-    <Content Include="wwwroot\lib\bootstrap\dist\js\bootstrap.js" />
-    <Content Include="wwwroot\lib\bootstrap\dist\js\bootstrap.min.js" />
-    <Content Include="wwwroot\lib\bootstrap\dist\js\npm.js" />
-    <Content Include="wwwroot\lib\bootstrap\LICENSE" />
-    <Content Include="wwwroot\lib\jquery-validation-unobtrusive\jquery.validate.unobtrusive.js" />
-    <Content Include="wwwroot\lib\jquery-validation-unobtrusive\jquery.validate.unobtrusive.min.js" />
-    <Content Include="wwwroot\lib\jquery-validation\dist\additional-methods.js" />
-    <Content Include="wwwroot\lib\jquery-validation\dist\additional-methods.min.js" />
-    <Content Include="wwwroot\lib\jquery-validation\dist\jquery.validate.js" />
-    <Content Include="wwwroot\lib\jquery-validation\dist\jquery.validate.min.js" />
-    <Content Include="wwwroot\lib\jquery-validation\LICENSE.md" />
-    <Content Include="wwwroot\lib\jquery\dist\jquery.js" />
-    <Content Include="wwwroot\lib\jquery\dist\jquery.min.js" />
-    <Content Include="wwwroot\lib\jquery\dist\jquery.min.map" />
-    <Content Include="wwwroot\lib\jquery\LICENSE.txt" />
-    <Content Include="wwwroot\_references.js" />
-    <Content Include="wwwroot\lib\bootbox.js\.bower.json" />
-    <Content Include="wwwroot\lib\bootbox.js\bower.json" />
-    <Content Include="wwwroot\lib\bootbox.js\package.json" />
-    <Content Include="wwwroot\lib\bootstrap\.bower.json" />
-    <Content Include="wwwroot\lib\jquery-validation-unobtrusive\.bower.json" />
-    <Content Include="wwwroot\lib\jquery-validation\.bower.json" />
-    <Content Include="wwwroot\lib\jquery\.bower.json" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="wwwroot\**\*">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="6.0.2" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="1.0.2" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics" Version="1.0.2" />
@@ -119,55 +57,6 @@
   <ItemGroup>
     <Folder Include="Models\HomeViewModels\" />
     <Folder Include="Models\NotificationViewModels\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="wwwroot\css\site.css" />
-    <None Include="wwwroot\css\site.min.css" />
-    <None Include="wwwroot\favicon.ico" />
-    <None Include="wwwroot\images\banner1.svg" />
-    <None Include="wwwroot\images\banner2.svg" />
-    <None Include="wwwroot\images\banner3.svg" />
-    <None Include="wwwroot\images\banner4.svg" />
-    <None Include="wwwroot\js\site.js" />
-    <None Include="wwwroot\js\site.min.js" />
-    <None Include="wwwroot\lib\bootbox.js\.gitignore" />
-    <None Include="wwwroot\lib\bootbox.js\.jshintrc" />
-    <None Include="wwwroot\lib\bootbox.js\.npmignore" />
-    <None Include="wwwroot\lib\bootbox.js\.travis.yml" />
-    <None Include="wwwroot\lib\bootbox.js\bootbox.js" />
-    <None Include="wwwroot\lib\bootbox.js\CONTRIBUTING.md" />
-    <None Include="wwwroot\lib\bootbox.js\LICENSE.md" />
-    <None Include="wwwroot\lib\bootbox.js\README.md" />
-    <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap-theme.css" />
-    <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap-theme.css.map" />
-    <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap-theme.min.css" />
-    <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap-theme.min.css.map" />
-    <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap.css" />
-    <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap.css.map" />
-    <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap.min.css" />
-    <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap.min.css.map" />
-    <None Include="wwwroot\lib\bootstrap\dist\fonts\glyphicons-halflings-regular.eot" />
-    <None Include="wwwroot\lib\bootstrap\dist\fonts\glyphicons-halflings-regular.svg" />
-    <None Include="wwwroot\lib\bootstrap\dist\fonts\glyphicons-halflings-regular.ttf" />
-    <None Include="wwwroot\lib\bootstrap\dist\fonts\glyphicons-halflings-regular.woff" />
-    <None Include="wwwroot\lib\bootstrap\dist\fonts\glyphicons-halflings-regular.woff2" />
-    <None Include="wwwroot\lib\bootstrap\dist\js\bootstrap.js" />
-    <None Include="wwwroot\lib\bootstrap\dist\js\bootstrap.min.js" />
-    <None Include="wwwroot\lib\bootstrap\dist\js\npm.js" />
-    <None Include="wwwroot\lib\bootstrap\LICENSE" />
-    <None Include="wwwroot\lib\jquery-validation-unobtrusive\jquery.validate.unobtrusive.js" />
-    <None Include="wwwroot\lib\jquery-validation-unobtrusive\jquery.validate.unobtrusive.min.js" />
-    <None Include="wwwroot\lib\jquery-validation\dist\additional-methods.js" />
-    <None Include="wwwroot\lib\jquery-validation\dist\additional-methods.min.js" />
-    <None Include="wwwroot\lib\jquery-validation\dist\jquery.validate.js" />
-    <None Include="wwwroot\lib\jquery-validation\dist\jquery.validate.min.js" />
-    <None Include="wwwroot\lib\jquery-validation\LICENSE.md" />
-    <None Include="wwwroot\lib\jquery\dist\jquery.js" />
-    <None Include="wwwroot\lib\jquery\dist\jquery.min.js" />
-    <None Include="wwwroot\lib\jquery\dist\jquery.min.map" />
-    <None Include="wwwroot\lib\jquery\LICENSE.txt" />
-    <None Include="wwwroot\_references.js" />
   </ItemGroup>
 
 </Project>

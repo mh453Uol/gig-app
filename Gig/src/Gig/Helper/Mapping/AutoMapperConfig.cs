@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Gig.Models;
 using Gig.Models.GigsViewModels;
 using System;
 using System.Collections.Generic;
@@ -21,7 +22,6 @@ namespace Gig.Helper.Mapping
                     .ForMember(dest => dest.Genre,
                         options => options.Ignore());
 
-
                 config.CreateMap<Models.Gig, GigsFormViewModel>()
                     .ForMember(dest => dest.Date,
                         options => options.MapFrom(src => src.DateAndTime.ToString("dd MMM yyyy")))
@@ -29,7 +29,14 @@ namespace Gig.Helper.Mapping
                         options => options.MapFrom(src => src.DateAndTime.ToString("HH:mm")))
                     .ForMember(dest => dest.Genre,
                         options => options.MapFrom(src => src.GenreId));
-                    
+
+                config.CreateMap<ApplicationUser, Dtos.UserDto>();
+
+                config.CreateMap<Models.Gig, Dtos.GigDto>();
+
+                config.CreateMap<Models.Genre, Dtos.GenreDto>();
+
+                config.CreateMap<Models.Notification, Dtos.NotificationDto>();
             });
         }
     }
