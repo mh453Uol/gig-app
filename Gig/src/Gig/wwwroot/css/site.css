@@ -52,7 +52,12 @@ textarea {
 .voffset4 {
     margin-bottom: 40px;
 }
+
 /*Bootstrap overrides*/
+.popover{
+    box-shadow:none;
+    -webkit-box-shadow:none;
+}
 .navbar-inverse {
     background-color: #ff4342;
     border-color: #ff4342;
@@ -149,4 +154,27 @@ ul.calendar {
 
 .js-notification-button:hover > .js-notification-button-label {
     background-color: white;
+}
+
+.popover-notifications ul.notifications {
+    list-style: none;
+    padding-left: 0;
+}
+
+.popover-notifications ul.notifications > li {
+    padding: 10px 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.popover-notifications ul.notifications :last-child {
+    border-bottom: none;
+}
+
+.popover-notifications .popover-content {
+    padding: 0;
+}
+
+
+.popover-notifications ul.notifications .notification-artist{
+   font-weight:bold; 
 }

@@ -1,7 +1,7 @@
 {
   "runtimeTarget": {
     "name": ".NETCoreApp,Version=v1.0",
-    "signature": "f852281dc3e297de19843db12dcefa95bce3e09b"
+    "signature": "753cc5e6e22767fc0c9a55c18b5a708f213ae820"
   },
   "compilationOptions": {
     "defines": [
@@ -24,6 +24,7 @@
       "gig/1.0.0": {
         "dependencies": {
           "AutoMapper": "6.0.2",
+          "BundlerMinifier.Core": "2.5.357",
           "Microsoft.AspNetCore.Authentication.Cookies": "1.0.2",
           "Microsoft.AspNetCore.Diagnostics": "1.0.2",
           "Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore": "1.0.2",
@@ -80,6 +81,19 @@
         },
         "compile": {
           "lib/netstandard1.3/AutoMapper.dll": {}
+        }
+      },
+      "bundlerminifier.core/2.5.357": {
+        "dependencies": {
+          "Microsoft.NETCore.App": "1.0.4",
+          "NUglify": "1.5.5",
+          "Newtonsoft.Json": "9.0.1"
+        },
+        "runtime": {
+          "lib/netcoreapp1.0/dotnet-bundle.dll": {}
+        },
+        "compile": {
+          "lib/netcoreapp1.0/dotnet-bundle.dll": {}
         }
       },
       "microsoft.aspnetcore.antiforgery/1.0.3": {
@@ -1636,6 +1650,18 @@
         },
         "compile": {
           "lib/netstandard1.3/NuGet.Frameworks.dll": {}
+        }
+      },
+      "nuglify/1.5.5": {
+        "dependencies": {
+          "NETStandard.Library": "1.6.1",
+          "System.Security.Cryptography.Algorithms": "4.3.0"
+        },
+        "runtime": {
+          "lib/netstandard1.3/NUglify.dll": {}
+        },
+        "compile": {
+          "lib/netstandard1.3/NUglify.dll": {}
         }
       },
       "remotion.linq/2.1.1": {
@@ -3717,6 +3743,13 @@
       "path": "automapper/6.0.2",
       "hashPath": "automapper.6.0.2.nupkg.sha512"
     },
+    "bundlerminifier.core/2.5.357": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-TJPDxLHcqj2DvmPB22x0hQ8MeyJwFMzLAcIiYqwFh27u9tTfNaNAMYm29y5KJPG6FNVyOOz2dB1sZpVrtkgEWw==",
+      "path": "bundlerminifier.core/2.5.357",
+      "hashPath": "bundlerminifier.core.2.5.357.nupkg.sha512"
+    },
     "microsoft.aspnetcore.antiforgery/1.0.3": {
       "type": "package",
       "serviceable": true,
@@ -4430,6 +4463,13 @@
       "sha512": "sha512-mj7pCguESABXPe27wleBICqbo1h0nm1bdfQN9GSUnKOdWI2QNhE3AB0SvAWrD0PYanzG65thsbCeB/uLj+XSwg==",
       "path": "nuget.frameworks/3.5.0",
       "hashPath": "nuget.frameworks.3.5.0.nupkg.sha512"
+    },
+    "nuglify/1.5.5": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-XguQgUPUHMOmfOGlSgVRHIMVBJYz86cViTP8kiD1Oa4EKKUrvfL4a4BhWUxdg5rZBLrIAcoYu/V43F5iH/PucA==",
+      "path": "nuglify/1.5.5",
+      "hashPath": "nuglify.1.5.5.nupkg.sha512"
     },
     "remotion.linq/2.1.1": {
       "type": "package",

@@ -8,6 +8,7 @@
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
 
     <environment names="Development">
+        @* In development we load dont need to load min files since we might want to debug *@
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
         <link rel="stylesheet" href="~/css/site.css" />
         <link rel="stylesheet" href="~/css/animate.css" />
@@ -17,7 +18,6 @@
               asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
               asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
         <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
-        <link rel="stylesheet" href="~/css/animate.css" />
     </environment>
 </head>
 <body>
@@ -54,7 +54,8 @@
         <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
         <script src="~/lib/bootbox.js/bootbox.js"></script>
         <script src="~/js/underscore-min.js"></script>
-        <script src="~/js/site.js"></script>
+        <script src="~/js/site.min.js"></script>
+        <script src="~/js/moment.js"></script>
     </environment>
     <environment names="Staging,Production">
         <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.2.0.min.js"
@@ -69,16 +70,15 @@
                 asp-fallback-src="~/lib/bootbox.js/bootbox.js"
                 asp-fallback-test="window.bootbox">
         </script>
-        <script src="~/js/underscore-min.js"></script>
         <script src="~/js/site.min.js" asp-append-version="true"></script>
     </environment>
 
     @RenderSection("scripts", required: false)
     <script type="text/template" id="notifications-template">
-        <ul>
+        <ul class="notifications">
             <%_.each(notifications,function(notification){
             if(notification.type == 1){ %>
-            <li><%= notification.gig.artist.firstName %> has cancelled the gig at <%= notification.gig.venue %> at <%= notification.gig.dateAndTime %>.</li>
+            <li><span class="notification-artist"><%= notification.gig.artist.firstName %></span> has cancelled the gig at <%= notification.gig.venue %> at <%= moment(notification.gig.dateAndTime).format("D MMM YYYY HH:mm") %>.</li>
             <% } else if(notification.type == 2){
             var changes = [];
             var originalValues = [];
@@ -92,11 +92,11 @@
 
             if(notification.originalDateTime != notification.gig.DateAndTime){
             changes.push("date/time");
-            originalValues.push(notification.originalDateTime);
-            newValues.push(notification.gig.dateAndTime);
+            originalValues.push(moment(notification.originalDateTime).format("D MMM YYYY HH:mm"));
+            newValues.push(moment(notification.gig.dateAndTime).format("D MMM YYYY HH:mm"));
             } %>
 
-            <li><%= notification.gig.artist.firstName %> has changed the <%= changes.join(" and ") %> of the gig from <%= originalValues.join("/") %> to <%= newValues.join("/") %></li>
+            <li><span class="notification-artist"><%= notification.gig.artist.firstName %></span> has changed the <%= changes.join(" and ") %> of the gig from <%= originalValues.join("/") %> to <%= newValues.join("/") %></li>
             <% }
             });%>
         </ul>
@@ -128,7 +128,8 @@
                     },
                     placement: "bottom",
                     html: true,
-                    trigger: "focus"
+                    template: '<div class="popover popover-notifications" role="tooltip"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
+                    //trigger: "focus",
                 });
             }
 
