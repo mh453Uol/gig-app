@@ -52,16 +52,16 @@ namespace Gig.WebApiControllers
 
         [HttpPost]
         [Route("Seen")]
-        public async Task<IActionResult> Seen(List<int> notifications)
+        public async Task<IActionResult> Seen()
         {
 
             var userId = _userManager.GetUserId(HttpContext.User);
 
-            var unReadNotification = _db.UserNotification.Where(n =>
-                notifications.Contains(n.NotificationId) && n.UserId == userId)
+            var unReadNotification = _db.UserNotification
+                .Where(n => n.UserId == userId && !n.IsRead)
                 .ToList();
 
-            unReadNotification.ForEach(x => x.IsRead = true);
+            unReadNotification.ForEach(x => x.Read());
 
             await _db.SaveChangesAsync();
             return Ok();

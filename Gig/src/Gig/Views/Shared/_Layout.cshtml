@@ -90,7 +90,7 @@
             newValues.push(notification.gig.venue);
             }
 
-            if(notification.originalDateTime != notification.gig.DateAndTime){
+            if(notification.originalDateTime != notification.gig.dateAndTime){
             changes.push("date/time");
             originalValues.push(moment(notification.originalDateTime).format("D MMM YYYY HH:mm"));
             newValues.push(moment(notification.gig.dateAndTime).format("D MMM YYYY HH:mm"));
@@ -128,10 +128,24 @@
                     },
                     placement: "bottom",
                     html: true,
-                    template: '<div class="popover popover-notifications" role="tooltip"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
-                    //trigger: "focus",
+                    template: '<div class="popover popover-notifications" role="tooltip"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>',
+                    trigger: "focus"
+                }).on("shown.bs.popover", function () {
+                    OnReadNotifications();
                 });
             }
+
+            function OnReadNotifications() {
+                $.ajax({
+                    url: "/api/notification/seen",
+                    type: "POST",
+                    success: function () {
+                        $(".js-notifications-count").addClass("hide");
+                        $(".notifications").popover("destroy");
+                    }
+                })
+            }
+
 
         });
     </script>

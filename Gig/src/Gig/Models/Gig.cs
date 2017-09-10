@@ -45,6 +45,9 @@ namespace Gig.Models
 
             Notifications.Add(notification);
 
+            var i = Artist.Followees.Where(f => f.IsDeleted == false)
+                .Select(f => f.Follower).ToList();
+
             Artist.Followees.Where(f => f.IsDeleted = false)
                 .Select(f => f.Follower).ToList()
                 .ForEach(f => f.Notify(notification));

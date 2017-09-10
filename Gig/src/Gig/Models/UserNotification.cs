@@ -21,7 +21,7 @@ namespace Gig.Models
             this.Notification = notification;
         }
 
-        public bool IsRead { get; set; }
+        public bool IsRead { get; private set; }
 
         [Required]
         [ForeignKey("User")]
@@ -33,6 +33,11 @@ namespace Gig.Models
         public int NotificationId { get; private set; }
 
         public Notification Notification { get; private set; }
+
+        public void Read()
+        {
+            IsRead = true;
+        }
 
     }
 }
