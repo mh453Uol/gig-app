@@ -23,24 +23,32 @@ namespace Gig.Controllers
             this._userManager = userManager;
         }
 
-        public async Task<IActionResult> Index()
+        public ActionResult Index(string q = null)
         {
             var model = new GigsViewModel();
 
             model.IsAuthenticated = User.Identity.IsAuthenticated;
             model.Heading = "Upcoming Gigs";
 
-            var upcomingGigs = await _db.Gigs
+            var upcomingGigs = _db.Gigs
                 .Include(g => g.Artist)
                 .Include(g => g.Genre)
-                .Where(g => g.DateAndTime > DateTime.Now && 
-                g.IsCancelled == false)
-                .AsNoTracking()
-                .ToListAsync();
+                .Where(g => g.DateAndTime > DateTime.Now &&
+                g.IsCancelled == false);
 
-            model.UpcomingGigs = upcomingGigs;
+            if (!String.IsNullOrWhiteSpace(q))
+            {
+                upcomingGigs = upcomingGigs
+                    .Where(g => g.Artist.FullName.Contains(q) ||
+                           g.Genre.Name.Contains(q) ||
+                           g.Venue.Contains(q));
 
-            return View("_Gigs",model);
+                model.SearchTerm = q;
+            }
+
+            model.UpcomingGigs = upcomingGigs.AsNoTracking().ToList(); ;
+
+            return View("_Gigs", model);
         }
 
         public IActionResult About()

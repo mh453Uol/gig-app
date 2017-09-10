@@ -178,3 +178,7 @@ ul.calendar {
 .popover-notifications ul.notifications .notification-artist{
    font-weight:bold; 
 }
+
+#searchGigs {
+    width: 300px;
+}

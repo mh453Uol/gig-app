@@ -153,5 +153,11 @@ namespace Gig.Controllers
 
             return View(model);
         }
+
+        [HttpPost]
+        public ActionResult Search(GigsViewModel model)
+        {
+            return RedirectToAction("Index", "Home", new { q = model.SearchTerm });
+        }
     }
 }
