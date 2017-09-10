@@ -125,14 +125,15 @@ namespace Gig.Controllers
 
             if (gig == null) { return NotFound(); }
 
-            Mapper.Map<GigsFormViewModel, Models.Gig>(model, gig);
 
             if (gig.CantCancel())
             {
                 return BadRequest("Gig is cancelled or a past gig so you cant update");
             }
 
-            gig.Updated(model.DateAndTime(), model.Venue);
+            gig.Updated(gig.DateAndTime, gig.Venue);
+
+            Mapper.Map<GigsFormViewModel, Models.Gig>(model, gig);
 
             await _db.SaveChangesAsync();
             return RedirectToAction("Mine");

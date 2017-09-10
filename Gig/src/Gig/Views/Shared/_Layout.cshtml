@@ -53,7 +53,8 @@
         <script src="~/lib/jquery/dist/jquery.js"></script>
         <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
         <script src="~/lib/bootbox.js/bootbox.js"></script>
-        <script src="~/js/site.js" asp-append-version="true"></script>
+        <script src="~/js/underscore-min.js"></script>
+        <script src="~/js/site.js"></script>
     </environment>
     <environment names="Staging,Production">
         <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.2.0.min.js"
@@ -68,23 +69,69 @@
                 asp-fallback-src="~/lib/bootbox.js/bootbox.js"
                 asp-fallback-test="window.bootbox">
         </script>
+        <script src="~/js/underscore-min.js"></script>
         <script src="~/js/site.min.js" asp-append-version="true"></script>
     </environment>
 
     @RenderSection("scripts", required: false)
+    <script type="text/template" id="notifications-template">
+        <ul>
+            <%_.each(notifications,function(notification){
+            if(notification.type == 1){ %>
+            <li><%= notification.gig.artist.firstName %> has cancelled the gig at <%= notification.gig.venue %> at <%= notification.gig.dateAndTime %>.</li>
+            <% } else if(notification.type == 2){
+            var changes = [];
+            var originalValues = [];
+            var newValues = [];
+
+            if(notification.originalVenue != notification.gig.venue){
+            changes.push("venue");
+            originalValues.push(notification.originalVenue);
+            newValues.push(notification.gig.venue);
+            }
+
+            if(notification.originalDateTime != notification.gig.DateAndTime){
+            changes.push("date/time");
+            originalValues.push(notification.originalDateTime);
+            newValues.push(notification.gig.dateAndTime);
+            } %>
+
+            <li><%= notification.gig.artist.firstName %> has changed the <%= changes.join(" and ") %> of the gig from <%= originalValues.join("/") %> to <%= newValues.join("/") %></li>
+            <% }
+            });%>
+        </ul>
+    </script>
     <script>
         $(document).ready(function () {
+
             $.ajax({
                 url: "/api/notification/getNewNotifications",
                 dataType: "json",
                 type: "GET",
                 success: function (notifications) {
+                    if (notifications.length == 0) { return; }
                     $(".js-notifications-count")
                         .text(notifications.length)
                         .removeClass("hide")
                         .addClass("animated bounceInDown");
+
+                    onActivatePopover({ notifications: notifications });
                 }
             });
+
+            function onActivatePopover(notifications) {
+                $(".notifications").popover({
+                    title: "Notification",
+                    content: function () {
+                        var compiled = _.template($("#notifications-template").html());
+                        return compiled(notifications);
+                    },
+                    placement: "bottom",
+                    html: true,
+                    trigger: "focus"
+                });
+            }
+
         });
     </script>
 </body>
