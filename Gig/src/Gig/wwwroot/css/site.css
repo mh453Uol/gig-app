@@ -182,3 +182,18 @@ ul.calendar {
 #searchGigs {
     width: 300px;
 }
+
+.gig-artist-heading {
+    position:relative;
+    padding-bottom:10px;
+}
+
+.gig-artist-heading > h2 {
+    display: inline;
+}
+
+.gig-artist-follow-button {
+    position:absolute;
+    top:9px;
+    left:210px;
+}

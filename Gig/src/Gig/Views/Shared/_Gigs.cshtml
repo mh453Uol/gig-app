@@ -18,12 +18,6 @@
     </div>
 </form>
 
-
-<div class="alert alert-info collapse js-alert-error">
-    <a href="#" class="pull-right" style="color:white" onclick="$('.js-alert-error').hide()">x</a>
-    <p></p>
-</div>
-
 <ul class="calendar">
     @foreach (var gig in Model.UpcomingGigs)
     {
@@ -34,20 +28,24 @@
             </div>
             <div class="detail">
                 <p class="artist">
-                    <b>@gig.Artist.FullName</b>
+                    <a asp-controller="Gigs"
+                       asp-action="Detail"
+                       asp-route-id="@gig.Id"><b>@gig.Artist.FullName</b></a>
                     @if (gig.IsCancelled)
                     {
-                        <span class="label label-warning">CANCELLED!</span>
+                        <span class="label label-danger">CANCELLED!</span>
                     }
                 </p>
                 <p class="genre">@gig.Genre.Name</p>
                 @if (Model.IsAuthenticated)
                 {
+
                     <button data-artist-id="@gig.ArtistId" class="btn btn-default btn-xs js-toggle-following">Follow Artist</button>
-                    @if (!gig.IsCancelled)
-                    {
-                        <button data-gig-id="@gig.Id" class="btn btn-default btn-xs js-toggle-attendance">Going ?</button>
-                    }
+
+                    <button data-gig-id="@gig.Id"
+                            class="btn @(Model.Attending.Contains(gig.Id) ? "btn-info":"btn-default") btn-xs js-toggle-attendance">
+                        @(Model.Attending.Contains(gig.Id) ? "Going" : "Going?")
+                    </button>
                 }
             </div>
         </li>
@@ -63,16 +61,20 @@
                 var button = $(e.target);
                 $.post("/api/attendances", { gigId: button.attr("data-gig-id") })
                     .success(function () {
-                        button
-                            .removeClass("btn-default")
-                            .addClass("btn-info")
-                            .text("Going");
+
+                        if (isActive(button)) {
+                            button
+                                .addClass("btn-default")
+                                .removeClass("btn-info")
+                                .text("Going ?");
+                        }
+                        else {
+                            button
+                                .addClass("btn-info")
+                                .removeClass("btn-default")
+                                .text("Going");
+                        }
                     })
-                    .fail(function (xhr, textStatus, errorThrown) {
-                        var alert = $(".js-alert-error");
-                        alert.find("p").text(xhr.responseText);
-                        alert.show();
-                    });
             });
 
             $(".js-toggle-following").click(function (e) {
@@ -90,6 +92,10 @@
                         alert.show();
                     })
             });
+
+            function isActive(button) {
+                return $(button).hasClass("btn-info");
+            }
         });
     </script>
 

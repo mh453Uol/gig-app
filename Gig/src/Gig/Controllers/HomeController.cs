@@ -33,8 +33,8 @@ namespace Gig.Controllers
             var upcomingGigs = _db.Gigs
                 .Include(g => g.Artist)
                 .Include(g => g.Genre)
-                .Where(g => g.DateAndTime > DateTime.Now &&
-                g.IsCancelled == false);
+                .Where(g => g.DateAndTime > DateTime.Now && g.IsCancelled == false);
+
 
             if (!String.IsNullOrWhiteSpace(q))
             {
@@ -46,7 +46,18 @@ namespace Gig.Controllers
                 model.SearchTerm = q;
             }
 
-            model.UpcomingGigs = upcomingGigs.AsNoTracking().ToList(); ;
+            model.UpcomingGigs = upcomingGigs.ToList();
+
+            if (model.IsAuthenticated)
+            {
+                var userId = _userManager.GetUserId(User);
+
+                var gigsIds = model.UpcomingGigs.Select(g => g.Id);
+
+                model.Attending = _db.Attendances.Where(a => gigsIds.Contains(a.GigId))
+                    .Where(a => a.AttendeeId == userId && !a.IsCancelled)
+                    .ToLookup(a => a.GigId);
+            }
 
             return View("_Gigs", model);
         }

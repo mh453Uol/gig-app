@@ -32,7 +32,7 @@ namespace Gig.Controllers
             var userId = _userManager.GetUserId(HttpContext.User);
 
             var attending = await _db.Attendances
-                .Where(g => g.AttendeeId == userId)
+                .Where(g => g.AttendeeId == userId && !g.IsCancelled)
                 .Include(g => g.Gig)
                     .ThenInclude(g => g.Genre)
                 .Include(g => g.Gig)
@@ -44,6 +44,7 @@ namespace Gig.Controllers
             {
                 IsAuthenticated = true,
                 UpcomingGigs = attending.Select(g => g.Gig),
+                Attending = attending.ToLookup(a => a.GigId),
                 Heading = "Gigs I'm Attending"
             };
 
@@ -158,6 +159,41 @@ namespace Gig.Controllers
         public ActionResult Search(GigsViewModel model)
         {
             return RedirectToAction("Index", "Home", new { q = model.SearchTerm });
+        }
+
+        [HttpGet]
+        public ActionResult Detail(Guid id)
+        {
+            if (Guid.Empty == id)
+            {
+                return NotFound();
+            }
+
+
+            var gig = _db.Gigs.Include(g => g.Artist)
+                .FirstOrDefault(g => g.Id == id);
+
+            var userId = _userManager.GetUserId(User);
+
+            var model = new GigDetailViewModel();
+
+            model.Gig = gig;
+
+            if (userId != null)
+            {
+                var isAttending = _db.Attendances
+                    .Any(a => a.AttendeeId == userId &&
+                        a.GigId == gig.Id && !a.IsCancelled);
+
+                var isFollowing = _db.Followers.Any(f => f.FollowerId == userId &&
+                    f.FolloweeId == gig.ArtistId && !f.IsDeleted);
+
+                model.IsAttending = isAttending;
+                model.IsFollowingArtist = isFollowing;
+                model.IsAuthenticated = true;
+            }
+
+            return View(model);
         }
     }
 }

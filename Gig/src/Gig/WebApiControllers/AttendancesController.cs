@@ -27,26 +27,31 @@ namespace Gig.WebApiControllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Attend(AttendanceDto model)
+        public IActionResult Attend(AttendanceDto model)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             var userId = _userManager.GetUserId(HttpContext.User);
 
-            var gig = await _db.Gigs
-                .AsNoTracking()
-                .FirstOrDefaultAsync(g => g.Id == model.GigId && !g.IsCancelled);
+            var attendance = _db.Attendances
+                .FirstOrDefault(a => a.AttendeeId == userId &&
+                    a.GigId == model.GigId);
 
-            if (gig == null) { return BadRequest(); }
+            if (attendance == null)
+            {
+                // if no attendances then add.
+                attendance = new Attendance(userId, model.GigId);
+                _db.Attendances.Add(attendance);
+            }
+            else
+            {
+                attendance.Toggle();
+            }
 
-            var isAttending = await _db.Attendances
-                .AsNoTracking()
-                .AnyAsync(a => a.AttendeeId == userId &&
-                a.GigId == model.GigId);
-
-            if (isAttending) { return BadRequest("Your already attending this Gig"); }
-
-            var attendance = new Attendance(userId, model.GigId);
-            _db.Add(attendance);
-            await _db.SaveChangesAsync();
+            _db.SaveChanges();
 
             return Ok(attendance);
         }

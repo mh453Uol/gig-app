@@ -30,5 +30,13 @@ namespace Gig.Models
 
         [ForeignKey("AttendeeId")]
         public ApplicationUser Attendee { get; set; }
+
+        public bool IsCancelled { get; set; }
+
+
+        public void Toggle()
+        {
+            IsCancelled = !IsCancelled;
+        }
     }
 }
