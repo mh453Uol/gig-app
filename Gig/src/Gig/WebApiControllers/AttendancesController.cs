@@ -36,24 +36,49 @@ namespace Gig.WebApiControllers
 
             var userId = _userManager.GetUserId(HttpContext.User);
 
-            var attendance = _db.Attendances
-                .FirstOrDefault(a => a.AttendeeId == userId &&
-                    a.GigId == model.GigId);
+            var attendanceExist = _db.Attendances
+                .SingleOrDefault(a => a.GigId == model.GigId &&
+                    a.AttendeeId == userId && a.IsCancelled == true);
 
-            if (attendance == null)
+            if (attendanceExist == null)
             {
-                // if no attendances then add.
-                attendance = new Attendance(userId, model.GigId);
+                var attendance = new Attendance(userId, model.GigId);
                 _db.Attendances.Add(attendance);
             }
             else
             {
-                attendance.Toggle();
+                attendanceExist.Attend();
             }
 
             _db.SaveChanges();
 
-            return Ok(attendance);
+            return Ok();
+        }
+
+        [HttpDelete]
+        public IActionResult Cancel(Guid id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var userId = _userManager.GetUserId(User);
+
+            var attendance = _db.Attendances
+                .FirstOrDefault(a => a.GigId == id &&
+                    a.AttendeeId == userId && a.IsCancelled == false);
+
+            if (attendance == null)
+            {
+                return NotFound();
+            }
+
+            attendance.Cancel();
+
+            _db.SaveChanges();
+
+            return Ok(id);
         }
     }
 }

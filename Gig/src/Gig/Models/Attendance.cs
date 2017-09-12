@@ -33,10 +33,14 @@ namespace Gig.Models
 
         public bool IsCancelled { get; set; }
 
-
-        public void Toggle()
+        public void Cancel()
         {
-            IsCancelled = !IsCancelled;
+            IsCancelled = true;
+        }
+
+        public void Attend()
+        {
+            IsCancelled = false;
         }
     }
 }

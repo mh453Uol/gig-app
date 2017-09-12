@@ -59,22 +59,34 @@
 
             $(".js-toggle-attendance").click(function (e) {
                 var button = $(e.target);
-                $.post("/api/attendances", { gigId: button.attr("data-gig-id") })
-                    .success(function () {
 
-                        if (isActive(button)) {
-                            button
-                                .addClass("btn-default")
-                                .removeClass("btn-info")
-                                .text("Going ?");
-                        }
-                        else {
+                if (!isActive(button)) {
+                    //if not active then we want to attend.
+
+                    $.post("/api/attendances", { gigId: button.attr("data-gig-id") })
+                        .success(function () {
                             button
                                 .addClass("btn-info")
                                 .removeClass("btn-default")
                                 .text("Going");
+                        })
+                }
+                else {
+                    //if active then we want to cancel
+                    $.ajax({
+                        url: "/api/attendances?id=" + button.attr("data-gig-id"),
+                        method: "DELETE",
+                        success: function () {
+                            button
+                                .addClass("btn-default")
+                                .removeClass("btn-info")
+                                .text("Going ?");
+                        },
+                        error: function () {
+                            alert("Error");
                         }
-                    })
+                    });
+                }
             });
 
             $(".js-toggle-following").click(function (e) {
