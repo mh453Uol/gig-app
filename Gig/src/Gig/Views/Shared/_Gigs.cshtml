@@ -8,7 +8,7 @@
 <form asp-controller="Gigs" asp-action="Search" method="post">
     <div class="form-group">
         <div class="input-group" id="searchGigs">
-            <input asp-for="SearchTerm" type="text" class="form-control" placeholder="Search for a gig..">
+            <input asp-for="SearchTerm" type="text" class="form-control" placeholder="Search for a gig by artist,genre and venue">
             <span class="input-group-btn">
                 <button class="btn btn-default" type="submit">
                     <i class="glyphicon glyphicon-search"></i>
@@ -18,7 +18,7 @@
     </div>
 </form>
 
-<ul class="calendar">
+<ul id="gigs" class="calendar">
     @foreach (var gig in Model.UpcomingGigs)
     {
         <li>
@@ -40,11 +40,14 @@
                 @if (Model.IsAuthenticated)
                 {
 
-                    <button data-artist-id="@gig.ArtistId" class="btn btn-default btn-xs js-toggle-following">Follow Artist</button>
+                    <button data-artist-id="@gig.ArtistId"
+                            class="btn @(Model.Following.Contains(gig.ArtistId) ? "btn-info": "btn-default") btn-xs js-toggle-following">
+                        @(Model.Following.Contains(gig.ArtistId) ? "Following Artist" : "Follow Artist")
+                    </button>
 
                     <button data-gig-id="@gig.Id"
                             class="btn @(Model.Attending.Contains(gig.Id) ? "btn-info":"btn-default") btn-xs js-toggle-attendance">
-                        @(Model.Attending.Contains(gig.Id) ? "Going" : "Going?")
+                        @(Model.Attending.Contains(gig.Id) ? "Going" : "Going ?")
                     </button>
                 }
             </div>
@@ -57,57 +60,10 @@
     <script>
         $(document).ready(function () {
 
-            $(".js-toggle-attendance").click(function (e) {
-                var button = $(e.target);
+            GigsController.initialize("#gigs");
 
-                if (!isActive(button)) {
-                    //if not active then we want to attend.
+            ArtistController.initialize("#gigs");
 
-                    $.post("/api/attendances", { gigId: button.attr("data-gig-id") })
-                        .success(function () {
-                            button
-                                .addClass("btn-info")
-                                .removeClass("btn-default")
-                                .text("Going");
-                        })
-                }
-                else {
-                    //if active then we want to cancel
-                    $.ajax({
-                        url: "/api/attendances?id=" + button.attr("data-gig-id"),
-                        method: "DELETE",
-                        success: function () {
-                            button
-                                .addClass("btn-default")
-                                .removeClass("btn-info")
-                                .text("Going ?");
-                        },
-                        error: function () {
-                            alert("Error");
-                        }
-                    });
-                }
-            });
-
-            $(".js-toggle-following").click(function (e) {
-                var button = $(e.target);
-                $.post("/api/following/follow", { FolloweeId: button.attr("data-artist-id") })
-                    .success(function () {
-                        button
-                            .removeClass("btn-default")
-                            .addClass("btn-info")
-                            .text("Following");
-                    })
-                    .fail(function (xhr, textStatus, errorThrown) {
-                        var alert = $(".js-alert-error");
-                        alert.find("p").text(xhr.responseText);
-                        alert.show();
-                    })
-            });
-
-            function isActive(button) {
-                return $(button).hasClass("btn-info");
-            }
         });
     </script>
 

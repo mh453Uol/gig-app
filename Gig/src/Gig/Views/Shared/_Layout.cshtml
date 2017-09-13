@@ -56,6 +56,11 @@
         <script src="~/js/underscore-min.js"></script>
         <script src="~/js/site.min.js"></script>
         <script src="~/js/moment.js"></script>
+        <script src="~/js/app/app.js"></script>
+        <script src="~/js/app/services/attendanceService.js"></script>
+        <script src="~/js/app/services/followingService.js"></script>
+        <script src="~/js/app/controllers/gigsController.js"></script>
+        <script src="~/js/app/controllers/artistController.js"></script>
     </environment>
     <environment names="Staging,Production">
         <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.2.0.min.js"
@@ -140,7 +145,7 @@
                     type: "POST",
                     success: function () {
                         $(".js-notifications-count").addClass("hide");
-                        $(".notifications").popover("destroy");
+                        //$(".notifications").popover("destroy");
                     }
                 })
             }

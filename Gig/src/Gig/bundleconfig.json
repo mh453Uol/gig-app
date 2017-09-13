@@ -14,7 +14,12 @@
     "inputFiles": [
       "wwwroot/js/site.js",
       "wwwroot/js/understore-min.js",
-      "wwwroot/js/moment.js"
+      "wwwroot/js/moment.js",
+      "wwwroot/js/app/app.js",
+      "wwwroot/js/app/services/attendanceService.js",
+      "wwwroot/js/app/service/followingService.js",
+      "wwwroot/js/app/controllers/gigsController.js",
+      "wwwroot/js/app/controllers/artistController.js"
     ],
     // Optionally specify minification options
     "minify": {

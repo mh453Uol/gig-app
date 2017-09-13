@@ -35,5 +35,10 @@ namespace Gig.Models
         public ApplicationUser Followee { get; set; }
 
         public bool IsDeleted { get; set; }
+
+        public void Unfollow()
+        {
+            IsDeleted = true;
+        }
     }
 }

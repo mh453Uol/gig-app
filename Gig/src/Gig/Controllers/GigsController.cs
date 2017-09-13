@@ -40,11 +40,20 @@ namespace Gig.Controllers
                 .AsNoTracking()
                 .ToListAsync();
 
+            var gigsArtists = attending.Select(g => g.Gig.Artist.Id).Distinct();
+
+            var following = _db.Followers
+                    .Where(f => gigsArtists.Contains(f.FolloweeId) &&
+                            f.FollowerId == userId &&
+                            f.IsDeleted == false)
+                            .ToLookup(f => f.FolloweeId);
+
             var model = new GigsViewModel()
             {
                 IsAuthenticated = true,
                 UpcomingGigs = attending.Select(g => g.Gig),
                 Attending = attending.ToLookup(a => a.GigId),
+                Following = following,
                 Heading = "Gigs I'm Attending"
             };
 

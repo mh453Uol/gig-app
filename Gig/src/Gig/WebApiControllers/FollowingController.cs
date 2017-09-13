@@ -57,23 +57,23 @@ namespace Gig.WebApiControllers
             return Ok();
         }
 
-        [HttpPost]
+        [HttpDelete]
         [Route("Unfollow")]
-        public async Task<IActionResult> Unfollow(FollowingDto model)
+        public async Task<IActionResult> Unfollow(string followeeId)
         {
             var userId = _userManager.GetUserId(HttpContext.User);
 
             var following = await _db.Followers
                 .SingleOrDefaultAsync(f => f.FollowerId == userId &&
-                    f.FolloweeId == model.FolloweeId && f.IsDeleted == false);
+                    f.FolloweeId == followeeId && f.IsDeleted == false);
 
             var errorMessage = @"You can't unfollow this user since your 
                 not following them in the first place";
 
             if (following == null) { return BadRequest(errorMessage); }
 
-            following.IsDeleted = true;
-            _db.Update(following);
+            following.Unfollow();
+
             await _db.SaveChangesAsync();
 
             return Ok();
