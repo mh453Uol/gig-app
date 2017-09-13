@@ -4,18 +4,17 @@
     ViewData["Title"] = "Gig Details";
 }
 
-<div>
+<div id="gig">
     <div class="gig-artist-heading">
         <h2>@Model.Gig.Artist.FullName</h2>
 
         <span class="gig-artist-follow-button">
-            @if (Model.IsFollowingArtist && Model.IsAuthenticated)
+            @if (Model.IsAuthenticated)
             {
-                <button data-artist-id="@Model.Gig.Artist.Id" class="btn btn-info btn-xs js-toggle-following">Following Artist</button>
-            }
-            else
-            {
-                <button data-artist-id="@Model.Gig.Artist.Id" class="btn btn-default btn-xs js-toggle-following">Follow Artist</button>
+                <button data-artist-id="@Model.Gig.ArtistId"
+                        class="btn @(Model.IsFollowingArtist ? "btn-info": "btn-default") btn-xs js-toggle-following">
+                    @(Model.IsFollowingArtist ? "Following Artist" : "Follow Artist")
+                </button>
             }
         </span>
 
@@ -28,4 +27,16 @@
 @if (Model.IsAttending)
 {
     <p>You are attending this gig.</p>
+}
+
+@section Scripts
+    {
+    <script>
+        $(document).ready(function () {
+
+            ArtistController.initialize("#gig");
+
+        });
+    </script>
+
 }

@@ -15,26 +15,25 @@
 
             if (button.hasClass("btn-default")) {
 
-                followingService.follow(artistId, onFollowToggle, onError);
+                followingService.follow(artistId, toggleButton, onError);
             }
             else {
-                followingService.unfollow(artistId, onUnfollowToggle, onError);
+                followingService.unfollow(artistId, toggleButton, onError);
             }
     }
 
-    var onUnfollowToggle = function () {
-        $(".js-toggle-following.btn-info[data-artist-id=" + artistId + "]").each(toggleButton);
-    }
+    var toggleButton = function () {
+        var text = "";
 
-    var onFollowToggle = function () {
-        $(".js-toggle-following.btn-default[data-artist-id=" + artistId + "]").each(toggleButton);
-    }
+        if ($(button).text().trim() == "Following Artist") {
+            text = "Follow Artist";
+        } else {
+            text = "Following Artist";
+        }
 
+        //console.log(text, 1 + $(button).text().trim());
 
-    var toggleButton = function (index,element) {
-        var text = $(element).text() == "Following Artist" ? "Follow Artist" : "Following Artist";
-
-        $(element).toggleClass("btn-info").toggleClass("btn-default").text(text);
+        $(button).toggleClass("btn-info").toggleClass("btn-default").text(text);
     }
 
     var onError = function () {

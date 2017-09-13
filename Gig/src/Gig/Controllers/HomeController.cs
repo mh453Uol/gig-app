@@ -54,17 +54,10 @@ namespace Gig.Controllers
 
                 var gigsIds = model.UpcomingGigs.Select(g => g.Id);
 
-                var gigsArtists = model.UpcomingGigs.Select(g => g.ArtistId).Distinct();
 
                 model.Attending = _db.Attendances.Where(a => gigsIds.Contains(a.GigId))
                     .Where(a => a.AttendeeId == userId && !a.IsCancelled)
                     .ToLookup(a => a.GigId);
-
-                model.Following = _db.Followers
-                    .Where(f => gigsArtists.Contains(f.FolloweeId) &&
-                            f.FollowerId == userId &&
-                            f.IsDeleted == false)
-                            .ToLookup(f => f.FolloweeId);
             }
 
             return View("_Gigs", model);

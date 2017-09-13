@@ -40,11 +40,6 @@
                 @if (Model.IsAuthenticated)
                 {
 
-                    <button data-artist-id="@gig.ArtistId"
-                            class="btn @(Model.Following.Contains(gig.ArtistId) ? "btn-info": "btn-default") btn-xs js-toggle-following">
-                        @(Model.Following.Contains(gig.ArtistId) ? "Following Artist" : "Follow Artist")
-                    </button>
-
                     <button data-gig-id="@gig.Id"
                             class="btn @(Model.Attending.Contains(gig.Id) ? "btn-info":"btn-default") btn-xs js-toggle-attendance">
                         @(Model.Attending.Contains(gig.Id) ? "Going" : "Going ?")
@@ -61,9 +56,6 @@
         $(document).ready(function () {
 
             GigsController.initialize("#gigs");
-
-            ArtistController.initialize("#gigs");
-
         });
     </script>
 

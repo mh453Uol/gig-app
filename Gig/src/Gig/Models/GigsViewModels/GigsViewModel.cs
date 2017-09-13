@@ -22,6 +22,5 @@ namespace Gig.Models.GigsViewModels
         [StringLength(60, ErrorMessage = "The {0} must be at least {2} characters long", MinimumLength = 1)]
         public string SearchTerm { get; set; }
         public ILookup<Guid, Attendance> Attending { get; internal set; }
-        public ILookup<string, Following> Following { get; internal set; }
     }
 }
