@@ -16,6 +16,8 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Gig.Helper.Mapping;
 using Gig.Helper;
 using Microsoft.AspNetCore.Http;
+using Gig.Repositories;
+using Gig.Persistence;
 
 namespace Gig
 {
@@ -54,7 +56,15 @@ namespace Gig
             services.
                 AddMvc()
                 .AddJsonOptions(x => x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+
             // Add application services.
+            services.AddScoped<UnitOfWork, UnitOfWork>();
+
+            services.AddScoped<AttendanceRepository, AttendanceRepository>();
+            services.AddScoped<GigRepository, GigRepository>();
+            services.AddScoped<ApplicationUserRepository, ApplicationUserRepository>();
+            services.AddScoped<GenreRepository, GenreRepository>();
+            services.AddScoped<FollowingRepository, FollowingRepository>();
 
             services.AddTransient<IEmailSender, AuthMessageSender>();
             services.AddTransient<ISmsSender, AuthMessageSender>();

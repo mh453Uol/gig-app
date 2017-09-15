@@ -8,30 +8,29 @@ using Gig.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
+using Gig.Repositories;
+using Gig.Persistence;
 
 namespace Gig.Controllers
 {
     [Authorize]
     public class FollowingController : Controller
     {
-        private readonly ApplicationDbContext _db;
         private UserManager<ApplicationUser> _userManager;
+        private readonly UnitOfWork _unitOfWork;
 
-        public FollowingController(ApplicationDbContext db,
-            UserManager<ApplicationUser> userManager)
+        public FollowingController(UserManager<ApplicationUser> userManager,
+            UnitOfWork unitOfWork)
         {
-            this._db = db;
             this._userManager = userManager;
+            this._unitOfWork = unitOfWork;
         }
 
         public IActionResult Index()
         {
             var userId = _userManager.GetUserId(HttpContext.User);
 
-            var following = _db.Followers
-                .Include(f => f.Followee)
-                .Where(f => f.FollowerId == userId && f.IsDeleted == false)
-                .AsNoTracking();
+            var following = _unitOfWork.Following.GetUserFollowees(userId);
 
             return View(following);
         }

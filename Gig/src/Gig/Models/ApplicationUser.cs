@@ -17,10 +17,8 @@ namespace Gig.Models
 
         public ApplicationUser()
         {
-            //Follower is someone who is following someone.
             // Like following
             Followers = new Collection<Following>();
-            // Person who is being followed
             // Like folllowers
             Followees = new Collection<Following>();
             Notification = new Collection<UserNotification>();

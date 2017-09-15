@@ -8,55 +8,40 @@ using System.Threading.Tasks;
 using System.Linq;
 using System;
 using Gig.Models.GigsViewModels;
+using Gig.Repositories;
+using Gig.Persistence;
 
 namespace Gig.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ApplicationDbContext _db;
+        private readonly UnitOfWork _unitOfWork;
+
         private UserManager<ApplicationUser> _userManager;
 
-        public HomeController(ApplicationDbContext db,
+        public HomeController(UnitOfWork unitOfWork,
             UserManager<ApplicationUser> userManager)
         {
-            this._db = db;
-            this._userManager = userManager;
+            _userManager = userManager;
+            _unitOfWork = unitOfWork;
         }
 
         public ActionResult Index(string q = null)
         {
-            var model = new GigsViewModel();
-
-            model.IsAuthenticated = User.Identity.IsAuthenticated;
-            model.Heading = "Upcoming Gigs";
-
-            var upcomingGigs = _db.Gigs
-                .Include(g => g.Artist)
-                .Include(g => g.Genre)
-                .Where(g => g.DateAndTime > DateTime.Now && g.IsCancelled == false);
-
-
-            if (!String.IsNullOrWhiteSpace(q))
+            var model = new GigsViewModel()
             {
-                upcomingGigs = upcomingGigs
-                    .Where(g => g.Artist.FullName.Contains(q) ||
-                           g.Genre.Name.Contains(q) ||
-                           g.Venue.Contains(q));
-
-                model.SearchTerm = q;
-            }
-
-            model.UpcomingGigs = upcomingGigs.ToList();
+                IsAuthenticated = User.Identity.IsAuthenticated,
+                Heading = "Upcoming Gigs",
+                SearchTerm = q,
+                UpcomingGigs = _unitOfWork.Gig.GetUpcomingGigs(q)
+            };
 
             if (model.IsAuthenticated)
             {
                 var userId = _userManager.GetUserId(User);
 
-                var gigsIds = model.UpcomingGigs.Select(g => g.Id);
-
-
-                model.Attending = _db.Attendances.Where(a => gigsIds.Contains(a.GigId))
-                    .Where(a => a.AttendeeId == userId && !a.IsCancelled)
+                model.Attending = _unitOfWork.Attendance
+                    .GetGigsUserAttending(model.UpcomingGigs, userId)
                     .ToLookup(a => a.GigId);
             }
 

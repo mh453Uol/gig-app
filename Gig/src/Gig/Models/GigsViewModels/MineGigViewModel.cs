@@ -16,9 +16,9 @@ namespace Gig.Models.GigsViewModels
 
             PopulateLists(gigs);
         }
-        public List<Models.Gig> UpcomingGigs { get; set; }
-        public List<Models.Gig> CancelledGigs { get; set; }
-        public List<Models.Gig> PastGigs { get; set; }
+        public ICollection<Models.Gig> UpcomingGigs { get; set; }
+        public ICollection<Models.Gig> CancelledGigs { get; set; }
+        public ICollection<Models.Gig> PastGigs { get; set; }
 
         private void PopulateLists(List<Models.Gig> gigs)
         {

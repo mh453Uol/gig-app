@@ -28,7 +28,7 @@ namespace Gig.Models
         public ApplicationUser Follower { get; set; }
 
         [Required]
-        //A person who is being followed
+        //A person who you want to follow
         public string FolloweeId { get; set; }
 
         [ForeignKey("FolloweeId")]

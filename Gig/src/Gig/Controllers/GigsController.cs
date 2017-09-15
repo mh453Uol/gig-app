@@ -11,34 +11,29 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using System;
 using AutoMapper;
+using Gig.Repositories;
+using Gig.Persistence;
 
 namespace Gig.Controllers
 {
-    [Authorize]
     public class GigsController : Controller
     {
-        public readonly ApplicationDbContext _db;
+        private readonly UnitOfWork _unitOfWork;
         private UserManager<ApplicationUser> _userManager;
 
-        public GigsController(ApplicationDbContext _db,
-            UserManager<ApplicationUser> _userManager)
+        public GigsController(UnitOfWork unitOfWork,
+            UserManager<ApplicationUser> userManager)
         {
-            this._db = _db;
-            this._userManager = _userManager;
+            this._unitOfWork = unitOfWork;
+            this._userManager = userManager;
         }
 
+        [Authorize]
         public async Task<IActionResult> Attending()
         {
             var userId = _userManager.GetUserId(HttpContext.User);
 
-            var attending = await _db.Attendances
-                .Where(g => g.AttendeeId == userId && !g.IsCancelled)
-                .Include(g => g.Gig)
-                    .ThenInclude(g => g.Genre)
-                .Include(g => g.Gig)
-                    .ThenInclude(g => g.Artist)
-                .AsNoTracking()
-                .ToListAsync();
+            List<Attendance> attending = await _unitOfWork.Attendance.GetGigsUserAttending(userId);
 
             var model = new GigsViewModel()
             {
@@ -51,33 +46,31 @@ namespace Gig.Controllers
             return View("_Gigs", model);
         }
 
+        [Authorize]
         public async Task<IActionResult> Create()
         {
             var model = new GigsFormViewModel()
             {
-                Genres = await _db.Genres
-                    .AsNoTracking()
-                    .ToListAsync()
+                Genres = await _unitOfWork.Genre.GetAllGenres()
             };
 
             return View(model);
         }
 
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(GigsFormViewModel model)
         {
             if (!ModelState.IsValid)
             {
-                model.Genres = await _db.Genres.ToListAsync();
+                model.Genres = await _unitOfWork.Genre.GetAllGenres();
                 return View(model);
             }
+
             var userId = _userManager.GetUserId(User);
 
-            var user = _userManager.Users
-                .Include(u => u.Followees)
-                    .ThenInclude(u => u.Follower)
-                .FirstOrDefault(u => u.Id == userId);
+            var user = _unitOfWork.ApplicationUser.GetUserFollowers(userId);
 
             var gig = AutoMapper.Mapper.Map<GigsFormViewModel, Models.Gig>(model);
 
@@ -85,47 +78,47 @@ namespace Gig.Controllers
 
             gig.Created();
 
-            _db.Add(gig);
+            _unitOfWork.Gig.Add(gig);
 
-            await _db.SaveChangesAsync();
+            await _unitOfWork.CompleteAsync();
+
             return RedirectToAction("Mine");
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> Edit(Guid gigId)
         {
-            if (gigId == Guid.Empty) { return NotFound(); }
+            var gig = await _unitOfWork.Gig.GetGig(gigId);
 
-            var userId = _userManager.GetUserId(HttpContext.User);
+            if (gig == null) { return NotFound(); }
 
-            var gig = await _db.Gigs
-                .AsNoTracking()
-                .SingleAsync(g => g.ArtistId == userId && g.Id == gigId);
+            if (gig.ArtistId != _userManager.GetUserId(HttpContext.User)) { return Unauthorized(); }
 
             var model = AutoMapper.Mapper.Map<Models.Gig, GigsFormViewModel>(gig);
-            model.Genres = await _db.Genres.ToListAsync();
+
+            model.Genres = await _unitOfWork.Genre.GetAllGenres();
 
             return View(model);
         }
 
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Update(GigsFormViewModel model)
         {
             if (!ModelState.IsValid)
             {
-                model.Genres = await _db.Genres.ToListAsync();
+                model.Genres = await _unitOfWork.Genre.GetAllGenres();
+
                 return View("Edit", model);
             }
-            var userId = _userManager.GetUserId(HttpContext.User);
 
-            var gig = await _db.Gigs
-                .Include(g => g.Attendances)
-                    .ThenInclude(g => g.Attendee)
-                .SingleOrDefaultAsync(g => g.Id == model.Id && g.ArtistId == userId);
+            var gig = await _unitOfWork.Gig.GetGigWithAttendees(model.Id);
 
             if (gig == null) { return NotFound(); }
 
+            if (gig.ArtistId != _userManager.GetUserId(HttpContext.User)) { return Unauthorized(); }
 
             if (gig.CantCancel())
             {
@@ -136,19 +129,17 @@ namespace Gig.Controllers
 
             Mapper.Map<GigsFormViewModel, Models.Gig>(model, gig);
 
-            await _db.SaveChangesAsync();
+            await _unitOfWork.CompleteAsync();
+
             return RedirectToAction("Mine");
         }
 
+        [Authorize]
         public async Task<IActionResult> Mine()
         {
             var userId = _userManager.GetUserId(HttpContext.User);
 
-            var gigs = await _db.Gigs
-                .Include(g => g.Genre)
-                .Where(g => g.ArtistId == userId)
-                .OrderBy(g => g.DateAndTime)
-                .ToListAsync();
+            var gigs = await _unitOfWork.Gig.GetArtistGigsWithGenres(userId);
 
             var model = new MineGigViewModel(gigs);
 
@@ -169,27 +160,26 @@ namespace Gig.Controllers
                 return NotFound();
             }
 
+            var gig = _unitOfWork.Gig.GetGigWithArtist(id);
 
-            var gig = _db.Gigs.Include(g => g.Artist)
-                .FirstOrDefault(g => g.Id == id);
+            if (gig == null) { NotFound(); }
+
+
+            var model = new GigDetailViewModel()
+            {
+                Gig = gig
+            };
 
             var userId = _userManager.GetUserId(User);
 
-            var model = new GigDetailViewModel();
-
-            model.Gig = gig;
-
             if (userId != null)
             {
-                var isAttending = _db.Attendances
-                    .Any(a => a.AttendeeId == userId &&
-                        a.GigId == gig.Id && !a.IsCancelled);
+                model.IsAttending = _unitOfWork.Attendance
+                    .GetAttendance(userId, gig.Id) != null;
 
-                var isFollowing = _db.Followers.Any(f => f.FollowerId == userId &&
-                    f.FolloweeId == gig.ArtistId && !f.IsDeleted);
+                model.IsFollowingArtist = _unitOfWork.Following
+                    .GetFollowing(userId, gig.ArtistId) != null;
 
-                model.IsAttending = isAttending;
-                model.IsFollowingArtist = isFollowing;
                 model.IsAuthenticated = true;
             }
 
