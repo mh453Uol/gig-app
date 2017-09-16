@@ -15,11 +15,11 @@ namespace Gig.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly UnitOfWork _unitOfWork;
+        private readonly IUnitOfWork _unitOfWork;
 
         private UserManager<ApplicationUser> _userManager;
 
-        public HomeController(UnitOfWork unitOfWork,
+        public HomeController(IUnitOfWork unitOfWork,
             UserManager<ApplicationUser> userManager)
         {
             _userManager = userManager;

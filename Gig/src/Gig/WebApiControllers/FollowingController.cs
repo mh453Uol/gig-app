@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using Gig.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
+using Gig.Persistence;
 
 namespace Gig.WebApiControllers
 {
@@ -18,63 +19,60 @@ namespace Gig.WebApiControllers
     [Authorize]
     public class FollowingController : Controller
     {
-        private readonly ApplicationDbContext _db;
+        private readonly IUnitOfWork _unitOfWork;
         private UserManager<ApplicationUser> _userManager;
 
-        public FollowingController(ApplicationDbContext db,
+        public FollowingController(IUnitOfWork unitOfWork,
             UserManager<ApplicationUser> userManager)
         {
-            this._db = db;
+            this._unitOfWork = unitOfWork;
             this._userManager = userManager;
         }
 
         [HttpPost]
         [Route("Follow")]
-        public async Task<IActionResult> Follow(FollowingDto model)
+        public ActionResult Follow(FollowingDto model)
         {
             var userId = _userManager.GetUserId(HttpContext.User);
 
-            var following = await _db.Followers
-                .FirstOrDefaultAsync(f => f.FollowerId == userId &&
-                f.FolloweeId == model.FolloweeId);
+            var following = _unitOfWork.Following.GetFollowing(userId, model.FolloweeId, true);
 
             if (following != null)
             {
                 if (following.IsDeleted)
                 {
                     following.IsDeleted = false;
-                    _db.Update(following);
 
-                    await _db.SaveChangesAsync();
+                    _unitOfWork.Complete();
                     return Ok();
                 }
 
                 return BadRequest("Your already following the artist");
             }
             var follow = new Following(userId, model.FolloweeId);
-            _db.Add(follow);
-            await _db.SaveChangesAsync();
+            _unitOfWork.Following.Add(follow);
+            _unitOfWork.Complete();
             return Ok();
         }
 
         [HttpDelete]
         [Route("Unfollow")]
-        public async Task<IActionResult> Unfollow(string followeeId)
+        public ActionResult Unfollow(string followeeId)
         {
             var userId = _userManager.GetUserId(HttpContext.User);
 
-            var following = await _db.Followers
-                .SingleOrDefaultAsync(f => f.FollowerId == userId &&
-                    f.FolloweeId == followeeId && f.IsDeleted == false);
+            var following = _unitOfWork.Following.GetFollowing(userId, followeeId);
 
             var errorMessage = @"You can't unfollow this user since your 
                 not following them in the first place";
 
             if (following == null) { return BadRequest(errorMessage); }
 
+            if (following.IsDeleted) { return BadRequest(errorMessage); }
+
             following.Unfollow();
 
-            await _db.SaveChangesAsync();
+            _unitOfWork.Complete();
 
             return Ok();
         }

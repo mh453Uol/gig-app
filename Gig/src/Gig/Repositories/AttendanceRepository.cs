@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Gig.Repositories
 {
-    public class AttendanceRepository
+    public class AttendanceRepository : IAttendanceRepository
     {
         private readonly ApplicationDbContext _db;
 
@@ -39,12 +39,15 @@ namespace Gig.Repositories
                         .AsNoTracking();
         }
 
-        public IEnumerable<Attendance> GetAttendance(string userId, Guid gigId)
+        public Attendance GetAttendance(string userId, Guid gigId, bool IsCancelled = false)
         {
-            return _db.Attendances.Where(a => a.AttendeeId == userId &&
-                        a.GigId == gigId && a.IsCancelled == false)
-                        .AsNoTracking()
-                        .ToList();
+            return _db.Attendances.SingleOrDefault(a => a.AttendeeId == userId &&
+                        a.GigId == gigId && a.IsCancelled == IsCancelled);
+        }
+
+        public void Add(Attendance attendance)
+        {
+            _db.Attendances.Add(attendance);
         }
     }
 }

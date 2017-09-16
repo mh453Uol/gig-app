@@ -9,7 +9,7 @@ using Gig.Models;
 
 namespace Gig.Repositories
 {
-    public class GigRepository
+    public class GigRepository : IGigRepository
     {
         private readonly ApplicationDbContext _db;
 

@@ -1,6 +1,8 @@
 using Gig.Data;
 using Gig.Dtos;
 using Gig.Models;
+using Gig.Persistence;
+using Gig.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -16,13 +18,13 @@ namespace Gig.WebApiControllers
     [Route("api/Attendances")]
     public class AttendancesController : Controller
     {
-        private readonly ApplicationDbContext _db;
+        private readonly IUnitOfWork _unitOfWork;
         private UserManager<ApplicationUser> _userManager;
 
-        public AttendancesController(ApplicationDbContext _db,
+        public AttendancesController(IUnitOfWork unitOfWork,
             UserManager<ApplicationUser> _userManager)
         {
-            this._db = _db;
+            this._unitOfWork = unitOfWork;
             this._userManager = _userManager;
         }
 
@@ -36,21 +38,18 @@ namespace Gig.WebApiControllers
 
             var userId = _userManager.GetUserId(HttpContext.User);
 
-            var attendanceExist = _db.Attendances
-                .SingleOrDefault(a => a.GigId == model.GigId &&
-                    a.AttendeeId == userId && a.IsCancelled == true);
+            var attendance = _unitOfWork.Attendance.GetAttendance(userId, model.GigId, true);
 
-            if (attendanceExist == null)
+            if (attendance == null)
             {
-                var attendance = new Attendance(userId, model.GigId);
-                _db.Attendances.Add(attendance);
+                _unitOfWork.Attendance.Add(new Attendance(userId, model.GigId));
             }
             else
             {
-                attendanceExist.Attend();
+                attendance.Attend();
             }
 
-            _db.SaveChanges();
+            _unitOfWork.Complete();
 
             return Ok();
         }
@@ -65,9 +64,7 @@ namespace Gig.WebApiControllers
 
             var userId = _userManager.GetUserId(User);
 
-            var attendance = _db.Attendances
-                .FirstOrDefault(a => a.GigId == id &&
-                    a.AttendeeId == userId && a.IsCancelled == false);
+            var attendance = _unitOfWork.Attendance.GetAttendance(userId, id);
 
             if (attendance == null)
             {
@@ -76,7 +73,7 @@ namespace Gig.WebApiControllers
 
             attendance.Cancel();
 
-            _db.SaveChanges();
+            _unitOfWork.Complete();
 
             return Ok(id);
         }

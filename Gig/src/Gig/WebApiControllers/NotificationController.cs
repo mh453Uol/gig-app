@@ -11,6 +11,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using Newtonsoft.Json;
 using Gig.Dtos;
+using Gig.Repositories;
+using Gig.Persistence;
 
 namespace Gig.WebApiControllers
 {
@@ -20,13 +22,13 @@ namespace Gig.WebApiControllers
     [Produces("application/json")]
     public class NotificationController : Controller
     {
-        private readonly ApplicationDbContext _db;
+        private readonly IUnitOfWork _unitOfWork;
         private UserManager<ApplicationUser> _userManager;
 
-        public NotificationController(ApplicationDbContext db,
+        public NotificationController(IUnitOfWork unitOfWork,
             UserManager<ApplicationUser> userManager)
         {
-            this._db = db;
+            this._unitOfWork = unitOfWork;
             this._userManager = userManager;
         }
 
@@ -36,34 +38,28 @@ namespace Gig.WebApiControllers
         {
             var userId = _userManager.GetUserId(HttpContext.User);
 
-            var notifications = _db.UserNotification
-                .Where(u => u.UserId == userId && !u.IsRead)
-                .Include(u => u.Notification)
-                    .ThenInclude(u => u.Gig.Artist)
-                .AsNoTracking()
-                .ToList();
-
-            var notificationsForUser = notifications.Select(n => n.Notification)
-                .ToList();
+            var notifications = _unitOfWork.Notification
+                    .GetUnreadNotificationsWithArtist(userId)
+                    .Select(n => n.Notification)
+                    .ToList();
 
             return Ok(AutoMapper.Mapper.Map<IEnumerable<NotificationDto>>
-                (notificationsForUser));
+                (notifications));
         }
 
         [HttpPost]
         [Route("Seen")]
-        public async Task<IActionResult> Seen()
+        public ActionResult Seen()
         {
 
             var userId = _userManager.GetUserId(HttpContext.User);
 
-            var unReadNotification = _db.UserNotification
-                .Where(n => n.UserId == userId && !n.IsRead)
-                .ToList();
+            var unread = _unitOfWork.Notification.GetUnreadNotifications(userId);
 
-            unReadNotification.ForEach(x => x.Read());
+            unread.ForEach(x => x.Read());
 
-            await _db.SaveChangesAsync();
+            _unitOfWork.Complete();
+
             return Ok();
         }
     }

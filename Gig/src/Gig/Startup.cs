@@ -58,13 +58,14 @@ namespace Gig
                 .AddJsonOptions(x => x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
             // Add application services.
-            services.AddScoped<UnitOfWork, UnitOfWork>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-            services.AddScoped<AttendanceRepository, AttendanceRepository>();
-            services.AddScoped<GigRepository, GigRepository>();
-            services.AddScoped<ApplicationUserRepository, ApplicationUserRepository>();
-            services.AddScoped<GenreRepository, GenreRepository>();
-            services.AddScoped<FollowingRepository, FollowingRepository>();
+            services.AddScoped<IAttendanceRepository, AttendanceRepository>();
+            services.AddScoped<IGigRepository, GigRepository>();
+            services.AddScoped<IApplicationUserRepository, ApplicationUserRepository>();
+            services.AddScoped<IGenreRepository, GenreRepository>();
+            services.AddScoped<IFollowingRepository, FollowingRepository>();
+            services.AddScoped<INotificationRepository, NotificationRepository>();
 
             services.AddTransient<IEmailSender, AuthMessageSender>();
             services.AddTransient<ISmsSender, AuthMessageSender>();

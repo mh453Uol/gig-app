@@ -7,22 +7,24 @@ using System.Threading.Tasks;
 
 namespace Gig.Persistence
 {
-    public class UnitOfWork
+    public class UnitOfWork : IUnitOfWork
     {
         private readonly ApplicationDbContext _db;
 
-        public readonly AttendanceRepository Attendance;
-        public readonly GigRepository Gig;
-        public readonly GenreRepository Genre;
-        public readonly ApplicationUserRepository ApplicationUser;
-        public readonly FollowingRepository Following;
+        public IAttendanceRepository Attendance { get; private set; }
+        public IGigRepository Gig { get; private set; }
+        public IGenreRepository Genre { get; private set; }
+        public IApplicationUserRepository ApplicationUser { get; private set; }
+        public IFollowingRepository Following { get; private set; }
+        public INotificationRepository Notification { get; private set; }
 
         public UnitOfWork(ApplicationDbContext _db,
-            AttendanceRepository attendanceRepository,
-            GigRepository gigRepository,
-            GenreRepository genreRepository,
-            ApplicationUserRepository applicationUserRepository,
-            FollowingRepository followingRepository)
+            IAttendanceRepository attendanceRepository,
+            IGigRepository gigRepository,
+            IGenreRepository genreRepository,
+            IApplicationUserRepository applicationUserRepository,
+            IFollowingRepository followingRepository,
+            INotificationRepository notificationRepository)
         {
             this._db = _db;
             this.Attendance = attendanceRepository;
@@ -30,6 +32,7 @@ namespace Gig.Persistence
             this.Genre = genreRepository;
             this.ApplicationUser = applicationUserRepository;
             this.Following = followingRepository;
+            this.Notification = notificationRepository;
         }
 
         public void Complete()

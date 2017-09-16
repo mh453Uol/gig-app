@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Gig.Repositories
 {
-    public class ApplicationUserRepository
+    public class ApplicationUserRepository : IApplicationUserRepository
     {
         private readonly ApplicationDbContext _db;
 

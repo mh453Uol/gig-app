@@ -9,6 +9,7 @@ using Gig.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
+using Gig.Persistence;
 
 namespace Gig.WebApiControllers
 {
@@ -17,13 +18,13 @@ namespace Gig.WebApiControllers
     [Authorize]
     public class GigsController : Controller
     {
-        private readonly ApplicationDbContext _db;
+        private readonly IUnitOfWork _unitOfWork;
         private UserManager<ApplicationUser> _userManager;
 
-        public GigsController(ApplicationDbContext db,
+        public GigsController(IUnitOfWork unitOfWork,
             UserManager<ApplicationUser> userManager)
         {
-            this._db = db;
+            this._unitOfWork = unitOfWork;
             this._userManager = userManager;
         }
 
@@ -35,12 +36,11 @@ namespace Gig.WebApiControllers
 
             var userId = _userManager.GetUserId(HttpContext.User);
 
-            var gig = _db.Gigs
-                .Include(g => g.Attendances)
-                    .ThenInclude(e => e.Attendee)
-                .SingleOrDefault(g => g.Id == gigId && g.ArtistId == userId);
+            var gig = await _unitOfWork.Gig.GetGigWithAttendees(gigId);
 
             if (gig == null) { return BadRequest(); }
+
+            if (gig.ArtistId != userId) { return Unauthorized(); }
 
             if (gig.CantCancel())
             {
@@ -48,8 +48,7 @@ namespace Gig.WebApiControllers
             }
 
             gig.Cancelled();
-
-            await _db.SaveChangesAsync();
+            await _unitOfWork.CompleteAsync();
             return Ok();
         }
     }

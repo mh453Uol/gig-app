@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Gig.Repositories
 {
-    public class FollowingRepository
+    public class FollowingRepository : IFollowingRepository
     {
         private readonly ApplicationDbContext _db;
 
@@ -17,12 +17,15 @@ namespace Gig.Repositories
             _db = db;
         }
 
-        public IEnumerable<Following> GetFollowing(string followerId, string followeeId)
+        public void Add(Following following)
         {
-            return _db.Followers.Where(f => f.FollowerId == followerId &&
-                        f.FolloweeId == followeeId && f.IsDeleted == false)
-                    .AsNoTracking()
-                    .ToList();
+            _db.Followers.Add(following);
+        }
+
+        public Following GetFollowing(string followerId, string followeeId, bool IsDeleted = false)
+        {
+            return _db.Followers.FirstOrDefault(f => f.FollowerId == followerId &&
+                        f.FolloweeId == followeeId && f.IsDeleted == IsDeleted);
         }
 
         public IEnumerable<Following> GetUserFollowees(string userId)

@@ -18,10 +18,10 @@ namespace Gig.Controllers
 {
     public class GigsController : Controller
     {
-        private readonly UnitOfWork _unitOfWork;
+        private readonly IUnitOfWork _unitOfWork;
         private UserManager<ApplicationUser> _userManager;
 
-        public GigsController(UnitOfWork unitOfWork,
+        public GigsController(IUnitOfWork unitOfWork,
             UserManager<ApplicationUser> userManager)
         {
             this._unitOfWork = unitOfWork;
