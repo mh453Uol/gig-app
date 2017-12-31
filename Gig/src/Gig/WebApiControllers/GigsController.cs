@@ -19,7 +19,7 @@ namespace Gig.WebApiControllers
     public class GigsController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
-        private UserManager<ApplicationUser> _userManager;
+        public UserManager<ApplicationUser> _userManager;
 
         public GigsController(IUnitOfWork unitOfWork,
             UserManager<ApplicationUser> userManager)
